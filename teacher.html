@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108m"><title>Teacher record · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108n"><title>Teacher record · GrowNest</title><style>
 main.tr{padding:24px 20px 60px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
 .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
@@ -30,7 +30,7 @@ main.tr{padding:24px 20px 60px}
  </div>
  <section class="card sec"><h2>Timeline</h2><div class="tl" id="tl"></div></section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108m"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108n"></script>
 <script>
 let ctx=null,T=null,obsAll=[],inds=[],judg={},sts=[];
 const tid=new URLSearchParams(location.search).get("id");
@@ -45,6 +45,7 @@ async function init(){ctx=await requireStaff();if(!ctx)return;headerButtons([["a
  const ids=obsAll.map(x=>x.id);
  if(ids.length){const [j,st]=await Promise.all([sb.from("observation_judgements").select("*").in("observation_id",ids),sb.from("observation_statements").select("observation_id, statements(text,kind,indicator_code)").in("observation_id",ids)]);
   (j.data||[]).forEach(r=>(judg[r.observation_id]=judg[r.observation_id]||[]).push(r));sts=(st.data||[]).filter(x=>x.statements);}
+ if(ctx.staff.role==="observer")showMsg($("msg"),"You’re seeing the observations and walks you carried out yourself. Leaders can see the full record.","info");
  $("tName").textContent=T.full_name;
  $("tLine").textContent=[T.email,T.teacher_type==="class_teacher"?"Class teacher"+(T.homeroom?" of "+T.homeroom:""):"Subject teacher",T.status==="left"?"Left the school"+(T.left_on?" on "+fmtDate(T.left_on):""):null].filter(Boolean).join(" · ");
  $("tChips").innerHTML=T.subjects.map(x=>`<span class="lchip" style="margin:2px 4px 2px 0">${esc(x)}</span>`).join("")+T.classes.map(x=>`<span class="lchip" style="margin:2px 4px 2px 0;background:#E5F0E3;color:#3F6B3B">${esc(x)}</span>`).join("");

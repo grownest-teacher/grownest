@@ -56,6 +56,7 @@ function previousPeriod(year, period){ const y = parseInt(year, 10);
 async function init(){
   ctx = await requireStaff(); if (!ctx) return;
   headerButtons([["app.html","Dashboard"],["settings.html","School settings"]]);
+  if (!["school_admin","leader"].includes(ctx.staff.role)) { document.querySelector("main").innerHTML = '<div class="card narrow"><h2>Leaders only</h2><p>SEF evidence is available to school leaders and admins, because it draws on observations across the whole school.</p></div>'; return; }
   const cur = academicYear(), y = parseInt(cur, 10);
   $("year").innerHTML = [`${y - 1}–${y}`, cur].map(v => `<option ${v === cur ? "selected" : ""}>${v}</option>`).join("");
   const m = new Date().getMonth(); $("period").value = m >= 7 ? "Term 1" : m <= 2 ? "Term 2" : "Term 3";
