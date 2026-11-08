@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108n"><title>Teachers · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108p"><title>Teachers · GrowNest</title><style>
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}
 .toolbar input,.toolbar select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;min-height:44px}
 .toolbar input{flex:1;min-width:200px}
@@ -12,7 +12,7 @@
 .two{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
 @media (max-width:640px){.two{grid-template-columns:1fr}}
 .hint{font-size:.82rem;color:var(--muted);font-weight:400}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108o"></script><link rel="stylesheet" href="rtl-app.css?v=20261108o"></head><body>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108p"></script><link rel="stylesheet" href="rtl-app.css?v=20261108p"></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap" style="padding:28px 20px 60px">
  <h1>Teachers</h1><p class="muted" id="schoolLine">Loading…</p>
@@ -36,6 +36,7 @@
     <label class="f">Subjects they teach <span class="hint">separate with commas, e.g. English, Maths</span><input id="tSubjects" list="subjectList" autocomplete="off"></label>
     <label class="f">Classes they teach <span class="hint">e.g. Grade 3A, Grade 3B</span><input id="tClasses" autocomplete="off"></label>
     <label class="f">Started at the school (optional)<input id="tJoined" type="date"></label>
+    <label class="f">Feedback language<select id="tLang"><option value="en">English</option><option value="ar">العربية (Arabic)</option></select><span class="hint">Emails and Word forms sent to this teacher use this language.</span></label>
    </div>
    <div id="formMsg" class="msg hide" role="status"></div>
    <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -62,7 +63,7 @@
 
  <div class="card" style="padding:8px 20px"><div class="tlist" id="list"></div></div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108o"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108p"></script>
 <script>
 let ctx=null, teachers=[], editing=null, pending=[];
 const split=s=>String(s||"").split(/[,;\n]/).map(x=>x.trim()).filter(Boolean);
@@ -82,13 +83,13 @@ function render(){
  const rows=teachers.filter(t=>(f==="all"||t.status===f)&&(!q||[t.full_name,t.email,...t.subjects,...t.classes].join(" ").toLowerCase().includes(q)));
  const active=teachers.filter(t=>t.status==="active").length;
  $("schoolLine").textContent=ctx.school.name+" · "+active+" current teacher"+(active===1?"":"s");
- $("list").innerHTML=rows.length?rows.map(t=>`<div class="row ${t.status==="left"?"left":""}"><div class="who"><b><a href="teacher.html?id=${t.id}" style="text-decoration:none">${esc(t.full_name)}</a>${t.status==="left"?'<span class="badge-left">Left</span>':""}</b><span class="muted">${esc(t.email)} · ${t.teacher_type==="class_teacher"?"Class teacher"+(t.homeroom?" of "+esc(t.homeroom):""):"Subject teacher"}</span><div>${t.subjects.map(s=>`<span class="chip">${esc(s)}</span>`).join("")}${t.classes.map(c=>`<span class="chip sage">${esc(c)}</span>`).join("")}</div></div><a class="btn primary small" href="teacher.html?id=${t.id}">Record</a> <button class="btn ghost small" data-edit="${t.id}">Edit</button></div>`).join("")
+ $("list").innerHTML=rows.length?rows.map(t=>`<div class="row ${t.status==="left"?"left":""}"><div class="who"><b><a href="teacher.html?id=${t.id}" style="text-decoration:none">${esc(t.full_name)}</a>${t.status==="left"?'<span class="badge-left">Left</span>':""}</b><span class="muted">${esc(t.email)} · ${t.teacher_type==="class_teacher"?"Class teacher"+(t.homeroom?" of "+esc(t.homeroom):""):"Subject teacher"}</span><div>${t.subjects.map(s=>`<span class="chip">${esc(s)}</span>`).join("")}${t.classes.map(c=>`<span class="chip sage">${esc(c)}</span>`).join("")}${t.feedback_lang==="ar"?'<span class="chip" style="background:#FFF1D6;color:#7A5200">Arabic feedback</span>':""}</div></div><a class="btn primary small" href="teacher.html?id=${t.id}">Record</a> <button class="btn ghost small" data-edit="${t.id}">Edit</button></div>`).join("")
   :`<p class="muted" style="padding:16px 0">${teachers.length?"No teachers match your search.":"No teachers yet. Tap “Add teacher” or import your staff list from Excel."}</p>`;
 }
 function openForm(t){
  editing=t||null; $("importPanel").classList.add("hide"); $("formPanel").classList.remove("hide"); $("formMsg").classList.add("hide");
  $("formTitle").textContent=t?"Edit teacher":"Add a teacher";
- $("tName").value=t?t.full_name:""; $("tEmail").value=t?t.email:""; $("tSubjects").value=t?t.subjects.join(", "):""; $("tClasses").value=t?t.classes.join(", "):""; $("tJoined").value=t&&t.joined_on?t.joined_on:"";$("tType").value=t?t.teacher_type:"class_teacher";$("tHome").value=t?(t.homeroom||""):"";typeUI();
+ $("tName").value=t?t.full_name:""; $("tEmail").value=t?t.email:""; $("tSubjects").value=t?t.subjects.join(", "):""; $("tClasses").value=t?t.classes.join(", "):""; $("tJoined").value=t&&t.joined_on?t.joined_on:"";$("tType").value=t?t.teacher_type:"class_teacher";$("tHome").value=t?(t.homeroom||""):"";$("tLang").value=t&&t.feedback_lang==="ar"?"ar":"en";typeUI();
  const lb=$("leftBtn"); lb.classList.toggle("hide",!t);
  if(t) lb.textContent=t.status==="left"?"Mark as returned":"Mark as left the school";
  $("formPanel").scrollIntoView({behavior:"smooth",block:"start"}); $("tName").focus();
@@ -102,7 +103,7 @@ $("search").oninput=render; $("filter").onchange=render;
 $("tForm").addEventListener("submit",async e=>{e.preventDefault();const m=$("formMsg");
  const type=$("tType").value,home=type==="class_teacher"?$("tHome").value.trim():"";
  let classes=split($("tClasses").value);if(home&&!classes.includes(home))classes=[home,...classes];
- const rec={full_name:$("tName").value.trim(),email:$("tEmail").value.trim().toLowerCase(),teacher_type:type,homeroom:home||null,subjects:split($("tSubjects").value),classes,joined_on:$("tJoined").value||null};
+ const rec={full_name:$("tName").value.trim(),email:$("tEmail").value.trim().toLowerCase(),teacher_type:type,homeroom:home||null,subjects:split($("tSubjects").value),classes,joined_on:$("tJoined").value||null,feedback_lang:$("tLang").value};
  if(!rec.full_name)return showMsg(m,"Please enter the teacher’s name.","err");
  if(!validEmail(rec.email))return showMsg(m,"Please enter a valid email address.","err");
  if(teachers.some(t=>t.email.toLowerCase()===rec.email&&(!editing||t.id!==editing.id)))return showMsg(m,"Another teacher already has this email.","err");
@@ -126,10 +127,10 @@ function saveXlsx(rows,sheet,file){const ws=XLSX.utils.aoa_to_sheet(rows);ws["!c
  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,sheet);XLSX.writeFile(wb,file);}
 $("exportBtn").onclick=()=>{if(!window.XLSX)return showMsg($("msg"),"The Excel maker didn’t load. Check your connection and refresh.","err");
  if(!teachers.length)return showMsg($("msg"),"There are no teachers to download yet.","info");
- const rows=[["Name","Email","Type","Homeroom","Subjects","Classes","Status","Started","Left on"],...teachers.map(t=>[t.full_name,t.email,t.teacher_type==="class_teacher"?"Class teacher":"Subject teacher",t.homeroom||"",t.subjects.join(", "),t.classes.join(", "),t.status==="left"?"Left":"Current",t.joined_on||"",t.left_on||""])];
+ const rows=[["Name","Email","Type","Homeroom","Subjects","Classes","Feedback language","Status","Started","Left on"],...teachers.map(t=>[t.full_name,t.email,t.teacher_type==="class_teacher"?"Class teacher":"Subject teacher",t.homeroom||"",t.subjects.join(", "),t.classes.join(", "),t.feedback_lang==="ar"?"Arabic":"English",t.status==="left"?"Left":"Current",t.joined_on||"",t.left_on||""])];
  saveXlsx(rows,"Teachers",("GrowNest teachers - "+ctx.school.name+" - "+new Date().toISOString().slice(0,10)+".xlsx").replace(/[\\/:*?"<>|]/g,""));
  showMsg($("msg"),"Downloaded "+teachers.length+" teacher"+(teachers.length===1?"":"s")+". The file opens in Excel or Numbers.","ok");};
-$("templateLink").onclick=e=>{e.preventDefault();if(window.XLSX){saveXlsx([["Name","Email","Type","Homeroom","Subjects","Classes"],["Sara Ahmed","sara.ahmed@school.ae","Class teacher","Grade 3A","Unit of Inquiry, English, Maths, Science","Grade 3A"],["Omar Khalid","omar.khalid@school.ae","Subject teacher","","Arabic","Grade 3A, Grade 3B, Grade 4A"]],"Teachers","GrowNest teachers template.xlsx");return;}
+$("templateLink").onclick=e=>{e.preventDefault();if(window.XLSX){saveXlsx([["Name","Email","Type","Homeroom","Subjects","Classes","Feedback language"],["Sara Ahmed","sara.ahmed@school.ae","Class teacher","Grade 3A","Unit of Inquiry, English, Maths, Science","Grade 3A","English"],["Omar Khalid","omar.khalid@school.ae","Subject teacher","","Arabic","Grade 3A, Grade 3B, Grade 4A","Arabic"]],"Teachers","GrowNest teachers template.xlsx");return;}
  const csv="\uFEFFName,Email,Type,Homeroom,Subjects,Classes\r\nSara Ahmed,sara.ahmed@school.ae,Class teacher,Grade 3A,\"Unit of Inquiry, English, Maths, Science\",Grade 3A\r\nOmar Khalid,omar.khalid@school.ae,Subject teacher,,Arabic,\"Grade 3A, Grade 3B, Grade 4A\"\r\n";
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="GrowNest teachers template.csv";document.body.appendChild(a);a.click();a.remove();};
 $("fileIn").onchange=async e=>{const f=e.target.files[0];if(!f)return;const m=$("importMsg");
@@ -144,7 +145,7 @@ $("fileIn").onchange=async e=>{const f=e.target.files[0];if(!f)return;const m=$(
    if(!name&&!email)return; if(!name||!validEmail(email)){bad++;return;} if(existing.has(email)||seen.has(email)){skipped++;return;}
    seen.add(email); const ty=/class/i.test(key(r,["type","teacher type","role"]))?"class_teacher":"subject_teacher"; const hm=ty==="class_teacher"?key(r,["homeroom","home room","own class"]):"";
    let cl=split(key(r,["classes","class","grades","grade"]));if(hm&&!cl.includes(hm))cl=[hm,...cl];
-   pending.push({school_id:ctx.school.id,full_name:name,email,teacher_type:ty,homeroom:hm||null,subjects:split(key(r,["subjects","subject"])),classes:cl});});
+   pending.push({school_id:ctx.school.id,full_name:name,email,teacher_type:ty,homeroom:hm||null,subjects:split(key(r,["subjects","subject"])),classes:cl,feedback_lang:/arab|عرب/i.test(key(r,["feedback language","language","feedback"]))?"ar":"en"});});
   $("preview").innerHTML=pending.length?"<table class='t'><tr><th>Name</th><th>Email</th><th>Type</th><th>Subjects</th><th>Classes</th></tr>"+pending.slice(0,50).map(t=>`<tr><td>${esc(t.full_name)}</td><td>${esc(t.email)}</td><td>${t.teacher_type==="class_teacher"?"Class teacher":"Subject teacher"}</td><td>${esc(t.subjects.join(", "))}</td><td>${esc(t.classes.join(", "))}</td></tr>`).join("")+"</table>"+(pending.length>50?`<p class="muted">…and ${pending.length-50} more</p>`:""):"";
   $("doImport").classList.toggle("hide",!pending.length);
   $("doImport").textContent="Add "+pending.length+" teacher"+(pending.length===1?"":"s");

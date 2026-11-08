@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108n"><title>Learning walk · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108p"><title>Learning walk · GrowNest</title><style>
 main.wk{padding:22px 20px 80px}
 .visit{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;border-left:6px solid var(--lilac)}
 .visit.sent{border-left-color:var(--sage)}
@@ -20,7 +20,7 @@ main.wk{padding:22px 20px 80px}
 .phs input{font:inherit;font-size:.78rem;border:0;border-top:1px solid var(--line);width:100%;padding:5px 6px}
 .phs button{font:inherit;font-size:.75rem;border:0;background:none;color:var(--danger);padding:4px;cursor:pointer;width:100%}
 @media (max-width:640px){.two{grid-template-columns:1fr}.visit{padding:14px}}
-</style><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108o"></script><link rel="stylesheet" href="rtl-app.css?v=20261108o"></head><body>
+</style><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108p"></script><link rel="stylesheet" href="rtl-app.css?v=20261108p"></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap wk">
  <h1 id="wTitle">Learning walk</h1><p class="muted" id="wSub"></p>
@@ -48,7 +48,7 @@ main.wk{padding:22px 20px 80px}
  </div>
  <p><button class="btn ghost small" id="delWalk" style="color:var(--danger)">Delete this walk</button></p>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108o"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108p"></script>
 <script>
 let ctx=null,walk=null,inds=[],teachers=[],visits=[],judg={},evid={};
 const ST={seen:"Seen",partly_seen:"Partly seen",not_seen:"Not yet seen"};
@@ -153,15 +153,25 @@ async function sendVisit(id){const v=visits.find(x=>x.id===id),t=v.teachers||{};
  if(v.status!=="sent"){const {error}=await sb.from("observations").update({status:"sent",sent_at:new Date().toISOString()}).eq("id",id);if(error)return showMsg($("msg"),friendly(error),"err");v.status="sent";}
  const first=(t.full_name||"").split(" ")[0],when=fmtDate(walk.walked_on),link=ch=>SITE+"respond.html?t="+v.response_token+"&c="+ch;
  const sp=s=>(s||"").split(/\n+/).map(x=>x.trim()).filter(Boolean);
- const lines=["Dear "+first+",","","Thank you for welcoming me into your "+(v.subject?v.subject+" ":"")+"lesson"+(v.grade_class?" with "+v.grade_class:"")+" during today’s learning walk ("+when+")."+(walk.title?" The focus of the walk was: "+walk.title+".":""),
+ let lines=["Dear "+first+",","","Thank you for welcoming me into your "+(v.subject?v.subject+" ":"")+"lesson"+(v.grade_class?" with "+v.grade_class:"")+" during today’s learning walk ("+when+")."+(walk.title?" The focus of the walk was: "+walk.title+".":""),
   ...(v.lesson_stage||v.duration_minutes?["I visited "+(v.lesson_stage==="whole"?"for the whole lesson":v.lesson_stage?"at the "+STAGE[v.lesson_stage].toLowerCase()+" of the lesson":"your lesson")+(v.duration_minutes?" for about "+v.duration_minutes+" minutes":"")+"."]:[]),"",
   "What I looked for (UAE MOE framework):",...inds.map(i=>{const c=jv[i.code]||{};return "• "+i.title+" (MOE "+i.moe_ref+"): "+(c.s?ST[c.s]:"Not looked at")+(c.note?" – "+c.note:"");}),"",
   ...(sp(v.extra_strengths).length?["What went well:",...sp(v.extra_strengths).map(x=>"• "+x),""]:[]),
   ...(sp(v.extra_development).length?["Next step:",...sp(v.extra_development).map(x=>"• "+x),""]:[]),
   "Please let me know whether you would like to meet to discuss this by tapping one of these links:","","I would like a meeting:",link("meeting_requested"),"","I don’t need a meeting:",link("no_meeting"),"",
   "Kind regards,",ctx.staff.full_name||"",ctx.staff.job_title||"",ctx.school.name];
+ const lang=teacherLang(t);let subj="Learning walk feedback – "+when;
+ if(lang==="ar"){const wA=fmtDateIn(walk.walked_on,"ar"),STA={seen:"ملاحَظ",partly_seen:"ملاحَظ جزئيًا",not_seen:"لم يُلاحَظ بعد"},STG={beginning:"في بداية الحصة",middle:"في منتصف الحصة",end:"في نهاية الحصة",whole:"طوال الحصة"};
+  lines=["عزيزي/عزيزتي "+first+"،","","شكرًا لاستقبالي في حصة "+(v.subject?subjAr(v.subject)+" ":"")+(v.grade_class?"مع "+v.grade_class+" ":"")+"خلال الجولة التعليمية اليوم ("+wA+")."+(walk.title?" وكان تركيز الجولة: "+walk.title+".":""),
+   ...(v.lesson_stage||v.duration_minutes?["كانت زيارتي "+(v.lesson_stage?STG[v.lesson_stage]:"لحصتك")+(v.duration_minutes?" لمدة "+v.duration_minutes+" دقيقة تقريبًا":"")+"."]:[]),"",
+   "ما ركّزت عليه (إطار وزارة التربية والتعليم):",...inds.map(i=>{const c=jv[i.code]||{};return "• "+(i.title_ar||i.title)+" (مرجع الوزارة "+i.moe_ref+"): "+(c.s?STA[c.s]:"لم يُنظر فيه")+(c.note?" – "+c.note:"");}),"",
+   ...(sp(v.extra_strengths).length?["ما الذي سار بشكل جيد:",...sp(v.extra_strengths).map(x=>"• "+x),""]:[]),
+   ...(sp(v.extra_development).length?["الخطوة التالية:",...sp(v.extra_development).map(x=>"• "+x),""]:[]),
+   "يُرجى إعلامي إن كنت ترغب في اجتماع لمناقشة ذلك بالضغط على أحد الرابطين:","","أرغب في اجتماع:",link("meeting_requested")+"&l=ar","","لا أحتاج إلى اجتماع:",link("no_meeting")+"&l=ar","",
+   "مع خالص التحية،",ctx.staff.full_name||"",ctx.staff.job_title||"",ctx.school.name];
+  subj="التغذية الراجعة للجولة التعليمية – "+wA;}
  renderVisits();
- const r=await deliverFeedback({observationId:id,to:t.email,subject:"Learning walk feedback – "+when,lines});
+ const r=await deliverFeedback({observationId:id,to:t.email,subject:subj,lines,lang});
  if(r==="sent")showMsg($("msg"),"Feedback emailed to "+t.full_name+". Their reply will come to your email.","ok");}
 $("delWalk").onclick=async()=>{if(visits.some(v=>v.status==="sent"))return showMsg($("msg"),"This walk has feedback that was sent to teachers, so it’s kept as part of their records.","info");
  if(!confirm("Delete this learning walk and all its visits?"))return;

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108n"><title>Appraisal · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108p"><title>Appraisal · GrowNest</title><style>
 main.ap{padding:22px 20px 150px}
 .area{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px}
 .area h3{margin:0 0 4px;font-size:1.05rem}
@@ -15,7 +15,7 @@ textarea.f2{font:inherit;width:100%;border:1px solid var(--line);border-radius:1
 .bar-in{max-width:1040px;margin:0 auto;padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .bar select{font:inherit;padding:8px;border:1px solid var(--line);border-radius:10px}
 @media (max-width:640px){.lv span{display:none}.lv b{font-size:1.3rem}.area{padding:12px}}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108o"></script><link rel="stylesheet" href="rtl-app.css?v=20261108o"></head><body>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108p"></script><link rel="stylesheet" href="rtl-app.css?v=20261108p"></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap ap">
  <h1 id="title">Appraisal</h1><p class="muted" id="sub"></p>
@@ -42,7 +42,7 @@ textarea.f2{font:inherit;width:100%;border:1px solid var(--line);border-radius:1
  <button class="btn primary small" id="sendBtn">Send to teacher</button>
  <a class="btn ghost small" href="appraisals.html">Done</a>
 </div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108o"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108p"></script>
 <script>
 let ctx=null,ap=null,T=null,areas=[],evid=[],evJ={},levels={},notes={};
 const aid=new URLSearchParams(location.search).get("id");
@@ -88,39 +88,48 @@ $("sendBtn").onclick=async()=>{if(!T.email)return showMsg($("msg"),"This teacher
  const ov=+$("ovSel").value||suggested();
  if(ap.status!=="sent"){const {error}=await sb.from("observations").update({status:"sent",sent_at:new Date().toISOString(),overall_level:ov||null}).eq("id",aid);if(error)return showMsg($("msg"),friendly(error),"err");ap.status="sent";}
  const link=ch=>SITE+"respond.html?t="+ap.response_token+"&c="+ch,first=(T.full_name||"").split(" ")[0],per=[ap.period_label,ap.academic_year].filter(Boolean).join(" ");
- const body=["Dear "+first+",","","Thank you for meeting with me for your "+per+" appraisal. Here is a summary of what we discussed, aligned to the UAE MOE framework.","",
+ let body=["Dear "+first+",","","Thank you for meeting with me for your "+per+" appraisal. Here is a summary of what we discussed, aligned to the UAE MOE framework.","",
   "Overall: "+(ov?ov+" – "+lvl(ov).name:"Not recorded"),"","Appraisal areas:",...areas.filter(a=>levels[a.code]).map(a=>"• "+a.title+": "+lvl(levels[a.code]).name+(notes[a.code]?" – "+notes[a.code]:"")),"",
   ...(lines($("strengths").value).length?["Key strengths:",...lines($("strengths").value).map(x=>"• "+x),""]:[]),
   ...(lines($("develop").value).length?["Areas for development:",...lines($("develop").value).map(x=>"• "+x),""]:[]),
   ...(lines($("targets").value).length?["Agreed targets:",...lines($("targets").value).map((x,i)=>(i+1)+". "+x),""]:[]),
   "Please let me know whether you would like another meeting to discuss this appraisal:","","I would like a meeting:",link("meeting_requested"),"","I don’t need a meeting:",link("no_meeting"),"",
   "Kind regards,",ctx.staff.full_name||"",ctx.staff.job_title||"",ctx.school.name];
- const r=await deliverFeedback({observationId:aid,to:T.email,subject:"Your "+per+" appraisal",lines:body});
+ const lang=teacherLang(T);let subj="Your "+per+" appraisal";
+ if(lang==="ar"){body=["عزيزي/عزيزتي "+first+"،","","شكرًا على لقائي لمناقشة تقييم أدائك ("+per+"). إليك ملخص ما ناقشناه وفق إطار وزارة التربية والتعليم.","",
+  "التقدير العام: "+(ov?ov+" – "+LV_AR[ov]:"غير مسجّل"),"","مجالات تقييم الأداء:",...areas.filter(a=>levels[a.code]).map(a=>"• "+(a.title_ar||a.title)+": "+LV_AR[levels[a.code]]+(notes[a.code]?" – "+notes[a.code]:"")),"",
+  ...(lines($("strengths").value).length?["نقاط القوة الرئيسية:",...lines($("strengths").value).map(x=>"• "+x),""]:[]),
+  ...(lines($("develop").value).length?["مجالات التطوير:",...lines($("develop").value).map(x=>"• "+x),""]:[]),
+  ...(lines($("targets").value).length?["الأهداف المتفق عليها:",...lines($("targets").value).map((x,i)=>(i+1)+". "+x),""]:[]),
+  "يُرجى إعلامي إن كنت ترغب في اجتماع آخر لمناقشة تقييم الأداء:","","أرغب في اجتماع:",link("meeting_requested")+"&l=ar","","لا أحتاج إلى اجتماع:",link("no_meeting")+"&l=ar","",
+  "مع خالص التحية،",ctx.staff.full_name||"",ctx.staff.job_title||"",ctx.school.name];subj="تقييم أدائك – "+per;}
+ const r=await deliverFeedback({observationId:aid,to:T.email,subject:subj,lines:body,lang});
  if(r==="sent")showMsg($("msg"),"Appraisal summary emailed to "+T.full_name+". Their reply will come to your email.","ok");};
 $("wordBtn").onclick=async()=>{if(!window.JSZip)return showMsg($("msg"),"The Word maker didn’t load. Check your connection and refresh.","err");
  const e=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
- const run=(t,o={})=>`<w:r><w:rPr>${o.b?"<w:b/>":""}<w:color w:val="${o.c||"222222"}"/><w:sz w:val="${o.sz||20}"/></w:rPr><w:t xml:space="preserve">${e(t)}</w:t></w:r>`;
- const p=(r,o={})=>`<w:p><w:pPr><w:spacing w:before="${o.bf||0}" w:after="${o.af==null?60:o.af}"/>${o.ind?'<w:ind w:left="300" w:hanging="200"/>':""}</w:pPr>${r}</w:p>`;
+ const R=teacherLang(T)==="ar",X=(en,ar)=>R?ar:en,LN=n=>R?LV_AR[n]:lvl(n).name;
+ const run=(t,o={})=>`<w:r><w:rPr>${R?'<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>':""}${o.b?"<w:b/><w:bCs/>":""}<w:color w:val="${o.c||"222222"}"/><w:sz w:val="${o.sz||20}"/><w:szCs w:val="${o.sz||20}"/>${R?"<w:rtl/>":""}</w:rPr><w:t xml:space="preserve">${e(t)}</w:t></w:r>`;
+ const p=(r,o={})=>`<w:p><w:pPr>${R?"<w:bidi/>":""}<w:spacing w:before="${o.bf||0}" w:after="${o.af==null?60:o.af}"/>${o.ind?(R?'<w:ind w:right="300" w:hanging="200"/>':'<w:ind w:left="300" w:hanging="200"/>'):""}</w:pPr>${r}</w:p>`;
  const c=(w,x,f,span)=>`<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${span?`<w:gridSpan w:val="${span}"/>`:""}${f?`<w:shd w:val="clear" w:color="auto" w:fill="${f}"/>`:""}<w:tcMar><w:top w:w="60" w:type="dxa"/><w:left w:w="80" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tcMar></w:tcPr>${x||p("")}</w:tc>`;
- const tb=(ws,rows,h)=>`<w:tbl><w:tblPr><w:tblW w:w="${ws.reduce((a,b)=>a+b,0)}" w:type="dxa"/><w:tblBorders>${["top","left","bottom","right","insideH","insideV"].map(s=>`<w:${s} w:val="single" w:sz="4" w:space="0" w:color="BFB3CC"/>`).join("")}</w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>${ws.map(w=>`<w:gridCol w:w="${w}"/>`).join("")}</w:tblGrid>${rows.map(r=>`<w:tr><w:trPr><w:cantSplit/>${h?`<w:trHeight w:val="${h}"/>`:""}</w:trPr>${r}</w:tr>`).join("")}</w:tbl>`;
+ const tb=(ws,rows,h)=>`<w:tbl><w:tblPr>${R?"<w:bidiVisual/>":""}<w:tblW w:w="${ws.reduce((a,b)=>a+b,0)}" w:type="dxa"/><w:tblBorders>${["top","left","bottom","right","insideH","insideV"].map(s=>`<w:${s} w:val="single" w:sz="4" w:space="0" w:color="BFB3CC"/>`).join("")}</w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>${ws.map(w=>`<w:gridCol w:w="${w}"/>`).join("")}</w:tblGrid>${rows.map(r=>`<w:tr><w:trPr><w:cantSplit/>${h?`<w:trHeight w:val="${h}"/>`:""}</w:trPr>${r}</w:tr>`).join("")}</w:tbl>`;
  const H=t=>p(run(t,{b:true,sz:24,c:"4A2C5E"}),{bf:200,af:80});const LF={6:"4F8A4B",5:"8BBF86",4:"CFE6CA",3:"F6D892",2:"F3B08A",1:"E07C7C"};const ov=+$("ovSel").value||suggested();
  const bl=a=>a.length?a.map(x=>p(run("•  "+x,{sz:19}),{ind:1})).join(""):p(run("–",{sz:19}));
- let b=p(run("Teacher Appraisal",{b:true,sz:34,c:"4A2C5E"}),{af:20})+p(run(ctx.school.name+" · UAE MOE framework · six-point scale",{sz:18,c:"76658A"}),{af:160});
- b+=tb([2200,3033,2200,3033],[["Teacher",T.full_name,"Period",[ap.period_label,ap.academic_year].filter(Boolean).join(" ")],["Role",T.teacher_type==="class_teacher"?"Class teacher"+(T.homeroom?" of "+T.homeroom:""):"Subject teacher","Meeting date",fmtDate(ap.observed_on)],["Subjects",T.subjects.join(", "),"Appraiser",[ctx.staff.full_name,ctx.staff.job_title].filter(Boolean).join(", ")]].map(r=>c(2200,p(run(r[0],{b:true,sz:18})),"EFE8F5")+c(3033,p(run(r[1],{sz:18})))+c(2200,p(run(r[2],{b:true,sz:18})),"EFE8F5")+c(3033,p(run(r[3],{sz:18})))));
- b+=p("",{af:100})+tb([2200,8266],[c(2200,p(run("Overall rating",{b:true,sz:18})),"EFE8F5")+c(8266,p(run(ov?ov+" – "+lvl(ov).name:"Not recorded",{b:true,sz:22})),ov?LF[ov]:null)]);
+ let b=p(run(X("Teacher Appraisal","تقييم أداء المعلم"),{b:true,sz:34,c:"4A2C5E"}),{af:20})+p(run(ctx.school.name+X(" · UAE MOE framework · six-point scale"," · إطار وزارة التربية والتعليم · مقياس من ست درجات"),{sz:18,c:"76658A"}),{af:160});
+ b+=tb([2200,3033,2200,3033],[[X("Teacher","المعلم"),T.full_name,X("Period","الفترة"),[ap.period_label,ap.academic_year].filter(Boolean).join(" ")],[X("Role","الدور"),T.teacher_type==="class_teacher"?X("Class teacher","معلم صف")+(T.homeroom?X(" of "," ")+T.homeroom:""):X("Subject teacher","معلم مادة"),X("Meeting date","تاريخ الاجتماع"),R?fmtDateIn(ap.observed_on,"ar"):fmtDate(ap.observed_on)],[X("Subjects","المواد"),R?T.subjects.map(subjAr).join("، "):T.subjects.join(", "),X("Appraiser","المقيِّم"),[ctx.staff.full_name,ctx.staff.job_title].filter(Boolean).join(", ")]].map(r=>c(2200,p(run(r[0],{b:true,sz:18})),"EFE8F5")+c(3033,p(run(r[1],{sz:18})))+c(2200,p(run(r[2],{b:true,sz:18})),"EFE8F5")+c(3033,p(run(r[3],{sz:18})))));
+ b+=p("",{af:100})+tb([2200,8266],[c(2200,p(run(X("Overall rating","التقدير العام"),{b:true,sz:18})),"EFE8F5")+c(8266,p(run(ov?ov+" – "+LN(ov):X("Not recorded","غير مسجّل"),{b:true,sz:22})),ov?LF[ov]:null)]);
  const fo=evid.filter(x=>x.type==="formal_observation"),lw=evid.filter(x=>x.type==="learning_walk");
- b+=H("Evidence")+p(run(`${fo.length} formal observation(s) and ${lw.length} learning walk visit(s) in ${ap.academic_year}.`,{sz:19}));
- b+=H("Appraisal areas")+tb([4300,2300,3866],[c(4300,p(run("Area",{b:true,c:"FFFFFF",sz:18})),"4A2C5E")+c(2300,p(run("Rating",{b:true,c:"FFFFFF",sz:18})),"4A2C5E")+c(3866,p(run("Evidence and comments",{b:true,c:"FFFFFF",sz:18})),"4A2C5E"),
-  ...areas.map(a=>c(4300,p(run(a.title,{sz:18}))+(a.moe_ref?p(run("MOE "+a.moe_ref,{sz:15,c:"76658A"})):""))+c(2300,p(run(levels[a.code]?levels[a.code]+" – "+lvl(levels[a.code]).name:"–",{b:true,sz:18})),levels[a.code]?LF[levels[a.code]]:null)+c(3866,p(run(notes[a.code]||"",{sz:17}))))]);
- b+=H("Key strengths")+bl(lines($("strengths").value))+H("Areas for development")+bl(lines($("develop").value));
- b+=H("Agreed targets")+(lines($("targets").value).length?lines($("targets").value).map((x,i)=>p(run((i+1)+".  "+x,{sz:19}),{ind:1})).join(""):p(run("–",{sz:19})));
- b+=H("Teacher’s comments")+tb([10466],[c(10466,"")],1400);
- b+=p("",{af:200})+tb([3400,3400,3666],[c(3400,p(run("Appraiser signature",{b:true,sz:19})),"EFE8F5")+c(3400,p(run("Teacher’s signature",{b:true,sz:19})),"EFE8F5")+c(3666,p(run("Date",{b:true,sz:19})),"EFE8F5"),c(3400,"")+c(3400,"")+c(3666,"")]);
+ b+=H(X("Evidence","الأدلة"))+p(run(R?`${fo.length} ملاحظة صفية رسمية و${lw.length} زيارة ضمن الجولات التعليمية في ${ap.academic_year}.`:`${fo.length} formal observation(s) and ${lw.length} learning walk visit(s) in ${ap.academic_year}.`,{sz:19}));
+ b+=H(X("Appraisal areas","مجالات تقييم الأداء"))+tb([4300,2300,3866],[c(4300,p(run(X("Area","المجال"),{b:true,c:"FFFFFF",sz:18})),"4A2C5E")+c(2300,p(run(X("Rating","التقدير"),{b:true,c:"FFFFFF",sz:18})),"4A2C5E")+c(3866,p(run(X("Evidence and comments","الأدلة والتعليقات"),{b:true,c:"FFFFFF",sz:18})),"4A2C5E"),
+  ...areas.map(a=>c(4300,p(run(R?(a.title_ar||a.title):a.title,{sz:18}))+(a.moe_ref?p(run(X("MOE ","مرجع الوزارة ")+a.moe_ref,{sz:15,c:"76658A"})):""))+c(2300,p(run(levels[a.code]?levels[a.code]+" – "+LN(levels[a.code]):"–",{b:true,sz:18})),levels[a.code]?LF[levels[a.code]]:null)+c(3866,p(run(notes[a.code]||"",{sz:17}))))]);
+ b+=H(X("Key strengths","نقاط القوة الرئيسية"))+bl(lines($("strengths").value))+H(X("Areas for development","مجالات التطوير"))+bl(lines($("develop").value));
+ b+=H(X("Agreed targets","الأهداف المتفق عليها"))+(lines($("targets").value).length?lines($("targets").value).map((x,i)=>p(run((i+1)+".  "+x,{sz:19}),{ind:1})).join(""):p(run("–",{sz:19})));
+ b+=H(X("Teacher’s comments","تعليقات المعلم"))+tb([10466],[c(10466,"")],1400);
+ b+=p("",{af:200})+tb([3400,3400,3666],[c(3400,p(run(X("Appraiser signature","توقيع المقيِّم"),{b:true,sz:19})),"EFE8F5")+c(3400,p(run(X("Teacher’s signature","توقيع المعلم"),{b:true,sz:19})),"EFE8F5")+c(3666,p(run(X("Date","التاريخ"),{b:true,sz:19})),"EFE8F5"),c(3400,"")+c(3400,"")+c(3666,"")]);
  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${b}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="700" w:right="720" w:bottom="700" w:left="720" w:header="300" w:footer="300" w:gutter="0"/></w:sectPr></w:body></w:document>`;
  const z=new JSZip();z.file("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`);
  z.file("_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`);
  z.file("word/document.xml",doc);const blob=await z.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=("Appraisal - "+T.full_name+" - "+[ap.period_label,ap.academic_year].filter(Boolean).join(" ")+".docx").replace(/[\/:*?"<>|]/g,"");document.body.appendChild(a);a.click();a.remove();};
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=(X("Appraisal - ","تقييم الأداء - ")+T.full_name+" - "+[ap.period_label,ap.academic_year].filter(Boolean).join(" ")+".docx").replace(/[\/:*?"<>|]/g,"");document.body.appendChild(a);a.click();a.remove();};
 $("delBtn").onclick=async()=>{if(ap.status==="sent")return showMsg($("msg"),"Sent appraisals are kept as part of the teacher’s record and can’t be deleted.","info");
  if(!confirm("Delete this draft appraisal?"))return;const {error}=await sb.from("observations").delete().eq("id",aid);if(error)return showMsg($("msg"),friendly(error),"err");location.href="appraisals.html";};
 init();</script>

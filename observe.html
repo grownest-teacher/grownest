@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108n"><title>Formal observation · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108p"><title>Formal observation · GrowNest</title><style>
 main.obs{padding:22px 20px 170px}
 .crit{display:grid;grid-template-columns:30px 1fr;background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:14px;overflow:hidden}
 .spine{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:600;font-size:.7rem;letter-spacing:.06em;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px 0}
@@ -27,7 +27,7 @@ main.obs{padding:22px 20px 170px}
 .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
 textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;width:100%;min-height:80px}
 @media (max-width:640px){.checks{grid-template-columns:1fr}.lv span{display:none}.lv b{font-size:1.3rem}.crit{grid-template-columns:22px 1fr}.crit-body{padding:12px}.bar-in{padding:8px 12px}}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108n"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108o"></script><link rel="stylesheet" href="rtl-app.css?v=20261108o"></head><body>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108p"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108p"></script><link rel="stylesheet" href="rtl-app.css?v=20261108p"></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap obs">
  <h1>Formal observation</h1>
@@ -89,7 +89,7 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
  <button class="btn primary small" id="sendBtn">Send to teacher</button>
  <a class="btn ghost small" href="observations.html">Done</a>
 </div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108o"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108p"></script>
 <script>
 let ctx=null, obs=null, teachers=[], inds=[], stmts=[], judg={}, ticked=new Set(), evidence=[];
 const AREA_COL={"Students’ achievement":"#6F9E6B","Personal development":"#9C84C4","Teaching and assessment":"#4A2C5E"};const AREA_LBL={"Students’ achievement":"Achievement","Personal development":"Personal","Teaching and assessment":"Teaching"};
@@ -230,9 +230,10 @@ async function makeObsDoc(){const c=compile(),t=teacherOf();
   let logo=null;try{const lb=await (await fetch("logo-header.png")).blob();const [w,h]=await dims(lb);logo={bytes:await toBytes(lb),w,h};}catch{}
   const photos=[];for(const ev of evidence){try{const {data,error}=await sb.storage.from("evidence").download(ev.storage_path);if(error)throw error;const [w,h]=await dims(data);
    const ind=inds.find(i=>i.code===ev.indicator_code);photos.push({bytes:await toBytes(data),w,h,caption:ev.caption||"",ind:ind?ind.code+" "+ind.title:""});}catch(e){console.warn(e);}}
-  const blob=await buildObsDocx({school:ctx.school.name,teacher:t.full_name,grade:$("grade").value,subject:$("subject").value,date:fmtDate($("date").value),focus:$("focus").value,
-   observer:ctx.staff.full_name,role:ctx.staff.job_title,overall:c.overall,rows:inds.map(i=>({title:i.title,moe:i.moe_ref,level:judg[i.code]||null})),www:c.www,nxt:c.nxt,photos,logo});
- return {blob,name:("Lesson observation - "+(t.full_name||"")+" - "+$("date").value+".docx").replace(/[\\/:*?"<>|]/g,"")};}
+  const ar=teacherLang(t)==="ar";
+  const blob=await buildObsDocx({lang:ar?"ar":"en",school:ctx.school.name,teacher:t.full_name,grade:$("grade").value,subject:ar?subjAr($("subject").value):$("subject").value,date:ar?fmtDateIn($("date").value,"ar"):fmtDate($("date").value),focus:$("focus").value,
+   observer:ctx.staff.full_name,role:ctx.staff.job_title,overall:c.overall,rows:inds.map(i=>({title:ar?(i.title_ar||i.title):i.title,moe:i.moe_ref,level:judg[i.code]||null})),www:ar?c.www.map(x=>arStmt(stmts,x)):c.www,nxt:ar?c.nxt.map(x=>arStmt(stmts,x)):c.nxt,photos:ar?photos.map(p=>p):photos,logo});
+ return {blob,name:((ar?"الملاحظة الصفية - ":"Lesson observation - ")+(t.full_name||"")+" - "+$("date").value+".docx").replace(/[\\/:*?"<>|]/g,"")};}
 $("sendBtn").onclick=async()=>{if(!obs)return;const t=teacherOf();
  if(!t.email)return showMsg($("msg"),"This teacher has no email address. Add it on the Teachers page first.","err");
  if(!Object.keys(judg).length)return showMsg($("msg"),"Please judge at least one indicator before sending.","err");
@@ -242,7 +243,7 @@ $("sendBtn").onclick=async()=>{if(!obs)return;const t=teacherOf();
   if(error)return showMsg($("msg"),friendly(error),"err");obs.status="sent";}
  const first=(t.full_name||"").split(" ")[0], when=fmtDate($("date").value), L=lvl(c.overall);
  const link=ch=>SITE+"respond.html?t="+obs.response_token+"&c="+ch;
- const lines=["Dear "+first+",","",
+ let lines=["Dear "+first+",","",
   "Thank you for welcoming me into your "+($("subject").value||"")+" lesson with "+($("grade").value||"your class")+" on "+when+". Here is your feedback, judged against the UAE MOE inspection framework.","",
   "Overall judgement: "+(L?c.overall+" – "+L.name:"Not recorded"),"",
   "Judgements:",...inds.filter(i=>judg[i.code]).map(i=>"• "+i.title+" (MOE "+i.moe_ref+"): "+lvl(judg[i.code]).name),"",
@@ -252,10 +253,23 @@ $("sendBtn").onclick=async()=>{if(!obs)return;const t=teacherOf();
   "I would like a meeting:",link("meeting_requested"),"",
   "I don’t need a meeting:",link("no_meeting"),"",
   "Kind regards,",ctx.staff.full_name||"",ctx.staff.job_title||"",ctx.school.name];
- const subj="Lesson observation feedback – "+[$("subject").value,when].filter(Boolean).join(", ");
+ let subj="Lesson observation feedback – "+[$("subject").value,when].filter(Boolean).join(", ");
+ const lang=teacherLang(t);
+ if(lang==="ar"){const wA=fmtDateIn($("date").value,"ar"),sA=subjAr($("subject").value);
+  lines=["عزيزي/عزيزتي "+first+"،","",
+   "شكرًا لاستقبالي في حصة "+(sA||"")+" مع "+($("grade").value||"صفّك")+" بتاريخ "+wA+". إليك التغذية الراجعة وفق إطار الرقابة المدرسية في دولة الإمارات.","",
+   "الحكم العام: "+(L?c.overall+" – "+LV_AR[c.overall]:"غير مسجّل"),"",
+   "الأحكام:",...inds.filter(i=>judg[i.code]).map(i=>"• "+(i.title_ar||i.title)+" (مرجع الوزارة "+i.moe_ref+"): "+LV_AR[judg[i.code]]),"",
+   "ما الذي سار بشكل جيد:",...(c.www.length?c.www.map(x=>"• "+arStmt(stmts,x)):["• —"]),"",
+   "الخطوات التالية:",...(c.nxt.length?c.nxt.map(x=>"• "+arStmt(stmts,x)):["• —"]),"",
+   "يُرجى إعلامي إن كنت ترغب في اجتماع لمناقشة هذه التغذية الراجعة بالضغط على أحد الرابطين:","",
+   "أرغب في اجتماع:",link("meeting_requested")+"&l=ar","",
+   "لا أحتاج إلى اجتماع:",link("no_meeting")+"&l=ar","",
+   "مع خالص التحية،",ctx.staff.full_name||"",ctx.staff.job_title||"",ctx.school.name];
+  subj="التغذية الراجعة للملاحظة الصفية – "+[sA,wA].filter(Boolean).join("، ");}
  $("sendBtn").disabled=true;$("sendBtn").textContent="Sending…";
  let att=null;try{if(window.JSZip){const d=await makeObsDoc();att={filename:d.name,content:await blobToBase64(d.blob)};}}catch(e){console.warn(e);}
- const r=await deliverFeedback({observationId:obs.id,to:t.email,subject:subj,lines,attachment:att});
+ const r=await deliverFeedback({observationId:obs.id,to:t.email,subject:subj,lines,attachment:att,lang});
  $("sendBtn").disabled=false;$("sendBtn").textContent="Send to teacher";
  if(r==="sent")showMsg($("msg"),"Feedback emailed to "+t.full_name+(att?", with the Word form attached":"")+". Their reply will come to your email.","ok");};
 $("wordBtn").onclick=async()=>{if(!obs)return;if(!window.JSZip)return showMsg($("msg"),"The Word maker didn’t load. Check your connection and refresh.","err");
@@ -266,8 +280,9 @@ $("wordBtn").onclick=async()=>{if(!obs)return;if(!window.JSZip)return showMsg($(
   let logo=null;try{const lb=await (await fetch("logo-header.png")).blob();const [w,h]=await dims(lb);logo={bytes:await toBytes(lb),w,h};}catch{}
   const photos=[];for(const ev of evidence){try{const {data,error}=await sb.storage.from("evidence").download(ev.storage_path);if(error)throw error;const [w,h]=await dims(data);
    const ind=inds.find(i=>i.code===ev.indicator_code);photos.push({bytes:await toBytes(data),w,h,caption:ev.caption||"",ind:ind?ind.code+" "+ind.title:""});}catch(e){console.warn(e);}}
-  const blob=await buildObsDocx({school:ctx.school.name,teacher:t.full_name,grade:$("grade").value,subject:$("subject").value,date:fmtDate($("date").value),focus:$("focus").value,
-   observer:ctx.staff.full_name,role:ctx.staff.job_title,overall:c.overall,rows:inds.map(i=>({title:i.title,moe:i.moe_ref,level:judg[i.code]||null})),www:c.www,nxt:c.nxt,photos,logo});
+  const ar=teacherLang(t)==="ar";
+  const blob=await buildObsDocx({lang:ar?"ar":"en",school:ctx.school.name,teacher:t.full_name,grade:$("grade").value,subject:ar?subjAr($("subject").value):$("subject").value,date:ar?fmtDateIn($("date").value,"ar"):fmtDate($("date").value),focus:$("focus").value,
+   observer:ctx.staff.full_name,role:ctx.staff.job_title,overall:c.overall,rows:inds.map(i=>({title:ar?(i.title_ar||i.title):i.title,moe:i.moe_ref,level:judg[i.code]||null})),www:ar?c.www.map(x=>arStmt(stmts,x)):c.www,nxt:ar?c.nxt.map(x=>arStmt(stmts,x)):c.nxt,photos:ar?photos.map(p=>p):photos,logo});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=("Lesson observation - "+(t.full_name||"")+" - "+$("date").value+".docx").replace(/[\/:*?"<>|]/g,"");
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
  }catch(e){console.error(e);showMsg($("msg"),"The Word form couldn’t be created. Please try again.","err");}

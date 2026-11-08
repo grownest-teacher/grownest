@@ -27,6 +27,8 @@ function render(){
     <label class="f">Title<input id="iTitle" value="${esc(ind.title)}"></label>
     <label class="f">MOE reference<input id="iMoe" value="${esc(ind.moe_ref || "")}" placeholder="e.g. 3.1.3"></label>
     <label class="f">Look-fors (shown under the title on the form)<textarea id="iLook" rows="3">${esc(ind.look_fors || "")}</textarea></label>
+    <label class="f">Title (Arabic)<input id="iTitleAr" dir="rtl" value="${esc(ind.title_ar || "")}"></label>
+    <label class="f">Look-fors (Arabic)<textarea id="iLookAr" dir="rtl" rows="3">${esc(ind.look_fors_ar || "")}</textarea></label>
     <button class="btn primary small" id="saveInd">Save wording</button> <span class="muted" id="indSt" style="font-size:.85rem"></span></div>`;
   if (lesson) {
     html += `<div class="card" style="margin-top:16px"><h2>Feedback statements</h2>
@@ -39,9 +41,9 @@ function render(){
 }
 function kindBlock(ind, kind){
   const rows = stmts.filter(s => s.indicator_code === ind.code && s.level === curLevel && s.kind === kind && s.active !== false).sort((a, b) => a.sort - b.sort);
-  return `<div><h3>${KIND[kind]}</h3>${rows.map((s, i) => `<div class="srow"><textarea data-sid="${s.id}" rows="4">${esc(s.text)}</textarea>
+  return `<div><h3>${KIND[kind]}</h3>${rows.map((s, i) => `<div class="srow"><div style="flex:1;display:flex;flex-direction:column;gap:4px"><textarea data-sid="${s.id}" rows="3">${esc(s.text)}</textarea><textarea data-sidar="${s.id}" dir="rtl" rows="3" placeholder="Arabic wording">${esc(s.text_ar || "")}</textarea></div>
     <div class="sbtns"><button type="button" title="Move up" data-up="${s.id}" ${i === 0 ? "disabled" : ""}>↑</button><button type="button" title="Move down" data-down="${s.id}" ${i === rows.length - 1 ? "disabled" : ""}>↓</button><button type="button" title="Save" data-savest="${s.id}">Save</button><button type="button" title="Remove" data-rm="${s.id}" class="rm">Remove</button></div></div>`).join("") || '<p class="muted">No statements at this level yet.</p>'}
-    <div class="srow"><textarea data-new="${kind}" rows="2" placeholder="Add a new statement…"></textarea><div class="sbtns"><button type="button" data-add="${kind}">Add</button></div></div></div>`;
+    <div class="srow"><div style="flex:1;display:flex;flex-direction:column;gap:4px"><textarea data-new="${kind}" rows="2" placeholder="Add a new statement…"></textarea><textarea data-newar="${kind}" dir="rtl" rows="2" placeholder="Arabic wording (optional)"></textarea></div><div class="sbtns"><button type="button" data-add="${kind}">Add</button></div></div></div>`;
 }
 function preview(ind){
   const L = lvl(curLevel), ss = k => stmts.filter(s => s.indicator_code === ind.code && s.level === curLevel && s.kind === k && s.active !== false).sort((a, b) => a.sort - b.sort);
@@ -53,8 +55,9 @@ function renderAlso(){
   $("side").innerHTML = '<p class="muted" style="padding:6px">Optional tick boxes on observations and walk visits. Each one feeds the SEF elements you link it to.</p>';
   const rows = [...also].sort((a, b) => a.sort - b.sort);
   $("panel").innerHTML = `<div class="card"><h2>“Also seen in this lesson” options</h2>
-    <table class="t"><tr><th>Option</th><th>SEF elements</th><th>Shown</th><th></th></tr>${rows.map((o, i) => `<tr>
+    <table class="t"><tr><th>Option</th><th>Arabic</th><th>SEF elements</th><th>Shown</th><th></th></tr>${rows.map((o, i) => `<tr>
       <td><input data-al="${o.code}" data-f="label" value="${esc(o.label)}"></td>
+      <td><input data-al="${o.code}" data-f="label_ar" dir="rtl" value="${esc(o.label_ar || "")}" placeholder="Arabic"></td>
       <td><input data-al="${o.code}" data-f="els" value="${esc((o.els || []).join(", "))}" placeholder="e.g. 2.2.2, 4.2.3" style="width:150px"></td>
       <td><input type="checkbox" data-al="${o.code}" data-f="active" ${o.active ? "checked" : ""}></td>
       <td style="white-space:nowrap"><button type="button" class="btn ghost small" data-aup="${o.code}" ${i === 0 ? "disabled" : ""}>↑</button> <button type="button" class="btn ghost small" data-adown="${o.code}" ${i === rows.length - 1 ? "disabled" : ""}>↓</button> <button type="button" class="btn primary small" data-asave="${o.code}">Save</button></td></tr>`).join("")}</table>
@@ -71,20 +74,21 @@ document.addEventListener("click", async e => {
   if (b.dataset.cur) { cur = b.dataset.cur; render(); return; }
   if (b.dataset.lv) { curLevel = +b.dataset.lv; render(); return; }
   if (b.id === "saveInd") {
-    const ok = await done(sb.from("indicators").update({title: $("iTitle").value.trim(), moe_ref: $("iMoe").value.trim() || null, look_fors: $("iLook").value.trim()}).eq("code", cur));
+    const ok = await done(sb.from("indicators").update({title: $("iTitle").value.trim(), moe_ref: $("iMoe").value.trim() || null, look_fors: $("iLook").value.trim(), title_ar: $("iTitleAr").value.trim() || null, look_fors_ar: $("iLookAr").value.trim() || null}).eq("code", cur));
     if (ok) { await loadAll(); render(); showMsg($("msg"), "Wording saved. It now shows for every school.", "ok"); } return; }
   const ind = inds.find(x => x.code === cur);
   if (b.dataset.savest) { // retire the old wording and add the new one in its place
-    const old = stmts.find(s => s.id === b.dataset.savest), text = document.querySelector(`textarea[data-sid="${old.id}"]`).value.trim();
+    const old = stmts.find(s => s.id === b.dataset.savest), text = document.querySelector(`textarea[data-sid="${old.id}"]`).value.trim(), textAr = document.querySelector(`textarea[data-sidar="${old.id}"]`).value.trim() || null;
     if (!text) return showMsg($("msg"), "A statement can’t be empty. Use Remove instead.", "err");
-    if (text === old.text) return;
-    if (await done(sb.from("statements").insert({indicator_code: old.indicator_code, level: old.level, kind: old.kind, text, sort: old.sort}))
+    if (text === old.text && textAr === (old.text_ar || null)) return;
+    if (text === old.text) { if (await done(sb.from("statements").update({text_ar: textAr}).eq("id", old.id), "Arabic wording saved.")) { try { sessionStorage.removeItem("gn_ar_db"); } catch (_) {} await loadAll(); render(); } return; }
+    if (await done(sb.from("statements").insert({indicator_code: old.indicator_code, level: old.level, kind: old.kind, text, text_ar: textAr, sort: old.sort}))
       && await done(sb.from("statements").update({active: false}).eq("id", old.id), "Statement updated.")) { await loadAll(); render(); } return; }
   if (b.dataset.rm) { if (!confirm("Remove this statement from the form? Past observations keep it.")) return;
     if (await done(sb.from("statements").update({active: false}).eq("id", b.dataset.rm), "Statement removed.")) { await loadAll(); render(); } return; }
-  if (b.dataset.add) { const kind = b.dataset.add, ta = document.querySelector(`textarea[data-new="${kind}"]`), text = ta.value.trim(); if (!text) return;
+  if (b.dataset.add) { const kind = b.dataset.add, ta = document.querySelector(`textarea[data-new="${kind}"]`), text = ta.value.trim(), textAr = (document.querySelector(`textarea[data-newar="${kind}"]`).value || "").trim() || null; if (!text) return;
     const n = stmts.filter(s => s.indicator_code === ind.code && s.level === curLevel && s.kind === kind && s.active !== false).length;
-    if (await done(sb.from("statements").insert({indicator_code: ind.code, level: curLevel, kind, text, sort: n + 1}), "Statement added.")) { await loadAll(); render(); } return; }
+    if (await done(sb.from("statements").insert({indicator_code: ind.code, level: curLevel, kind, text, text_ar: textAr, sort: n + 1}), "Statement added.")) { await loadAll(); render(); } return; }
   if (b.dataset.up || b.dataset.down) { const id = b.dataset.up || b.dataset.down, s0 = stmts.find(s => s.id === id);
     const rows = stmts.filter(s => s.indicator_code === s0.indicator_code && s.level === s0.level && s.kind === s0.kind && s.active !== false).sort((a, c) => a.sort - c.sort);
     const i = rows.findIndex(s => s.id === id), j = b.dataset.up ? i - 1 : i + 1; if (j < 0 || j >= rows.length) return;
@@ -93,7 +97,7 @@ document.addEventListener("click", async e => {
     await loadAll(); render(); return; }
   if (b.dataset.asave) { const c = b.dataset.asave, g = f => document.querySelector(`[data-al="${c}"][data-f="${f}"]`);
     const label = g("label").value.trim(); if (!label) return showMsg($("msg"), "Please enter the option text.", "err");
-    if (await done(sb.from("also_seen_options").update({label, els: elsOf(g("els").value), active: g("active").checked}).eq("code", c), "Option saved.")) await loadAll(); return; }
+    if (await done(sb.from("also_seen_options").update({label, label_ar: g("label_ar").value.trim() || null, els: elsOf(g("els").value), active: g("active").checked}).eq("code", c), "Option saved.")) await loadAll(); return; }
   if (b.dataset.aup || b.dataset.adown) { const c = b.dataset.aup || b.dataset.adown, rows = [...also].sort((a, d) => a.sort - d.sort), i = rows.findIndex(o => o.code === c), j = b.dataset.aup ? i - 1 : i + 1;
     if (j < 0 || j >= rows.length) return; [rows[i], rows[j]] = [rows[j], rows[i]];
     for (let k = 0; k < rows.length; k++) await sb.from("also_seen_options").update({sort: k + 1}).eq("code", rows[k].code);

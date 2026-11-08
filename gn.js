@@ -23,6 +23,14 @@ async function requireStaff(){
   if(!session){ location.href = "login.html"; return null; }
   const {data:staff} = await sb.from("staff").select("*, schools(*)").eq("id", session.user.id).maybeSingle();
   if(!staff || !staff.active || !staff.schools || staff.schools.status !== "active"){ location.href = "app.html"; return null; }
+  if (window.gnAddAR && gnLang() === "ar") { try { // show the MOE criteria in Arabic on screen
+    let m = null; try { m = JSON.parse(sessionStorage.getItem("gn_ar_db") || "null"); } catch (_) {}
+    if (!m) { m = {};
+      const [i, s, a] = await Promise.all([sb.from("indicators").select("title,title_ar,look_fors,look_fors_ar"), sb.from("statements").select("text,text_ar").not("text_ar", "is", null), sb.from("also_seen_options").select("label,label_ar")]);
+      (i.data || []).forEach(r => { if (r.title_ar) m[r.title] = r.title_ar; if (r.look_fors_ar && r.look_fors) m[r.look_fors] = r.look_fors_ar; });
+      (s.data || []).forEach(r => { m[r.text] = r.text_ar; }); (a.data || []).forEach(r => { if (r.label_ar) m[r.label] = r.label_ar; });
+      try { sessionStorage.setItem("gn_ar_db", JSON.stringify(m)); } catch (_) {} }
+    gnAddAR(m); } catch (_) {} }
   try { // "Also seen" options can be edited by the GrowNest owner
     const {data: opts} = await sb.from("also_seen_options").select("*").eq("active", true).order("sort");
     if (opts && opts.length) { ALSO_SEEN.length = 0; opts.forEach(o => ALSO_SEEN.push({code: o.code, label: o.label, els: o.els || []})); }
@@ -56,10 +64,10 @@ const SUBJECTS = ["Unit of Inquiry","English","Maths","Science","Arabic","Islami
 
 // Sends feedback automatically from feedback@ via the GrowNest email function; falls back to the email app.
 async function deliverFeedback(o){
-  const cut = o.lines.findIndex(l => /^Please let me know/.test(l));
+  const cut = o.lines.findIndex(l => /^(Please let me know|يُرجى إعلامي)/.test(l));
   const core = cut > 0 ? o.lines.slice(0, cut) : o.lines;
   try {
-    const {data, error} = await sb.functions.invoke("grownest-mail", {body: {action: "send", observation_id: o.observationId, subject: o.subject, lines: core, attachment: o.attachment || null}});
+    const {data, error} = await sb.functions.invoke("grownest-mail", {body: {action: "send", observation_id: o.observationId, subject: o.subject, lines: core, attachment: o.attachment || null, lang: o.lang || "en"}});
     if (error) { let m = error.message; try { const j = await error.context.json(); if (j && j.error) m = j.error; } catch (_) {} throw new Error(m); }
     if (data && data.error) throw new Error(data.error);
     return "sent";
@@ -70,6 +78,14 @@ async function deliverFeedback(o){
     return "mailto";
   }
 }
+// Arabic feedback for teachers who choose it
+const LV_AR = {6: "متميز", 5: "جيد جدًا", 4: "جيد", 3: "مقبول", 2: "ضعيف", 1: "ضعيف جدًا"};
+const SUBJ_AR = {"Unit of Inquiry": "وحدة الاستقصاء", "English": "اللغة الإنجليزية", "Maths": "الرياضيات", "Science": "العلوم", "Arabic": "اللغة العربية", "Islamic Education": "التربية الإسلامية", "Social Studies": "الدراسات الاجتماعية",
+  "Moral Education": "التربية الأخلاقية", "Art": "الفنون", "Music": "الموسيقى", "PE": "التربية البدنية", "Computing": "الحوسبة", "French": "اللغة الفرنسية", "Read Write Inc.": "Read Write Inc.", "Library": "المكتبة"};
+const subjAr = s => SUBJ_AR[s] || s || "";
+function fmtDateIn(s, lang){ if (!s) return ""; const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString(lang === "ar" ? "ar-AE-u-nu-latn" : "en-GB", {weekday: "long", day: "numeric", month: "long", year: "numeric"}); }
+const teacherLang = t => (t && t.feedback_lang === "ar") ? "ar" : "en";
+function arStmt(list, text){ const s = (list || []).find(x => x.text === text); return s && s.text_ar ? s.text_ar : text; }
 function blobToBase64(b){ return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(",")[1]); fr.onerror = rej; fr.readAsDataURL(b); }); }
 
 // "Also seen in this lesson" options, linked to SEF elements
