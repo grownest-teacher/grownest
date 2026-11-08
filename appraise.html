@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108h"><title>Appraisal · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108j"><title>Appraisal · GrowNest</title><style>
 main.ap{padding:22px 20px 150px}
 .area{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px}
 .area h3{margin:0 0 4px;font-size:1.05rem}
@@ -42,7 +42,7 @@ textarea.f2{font:inherit;width:100%;border:1px solid var(--line);border-radius:1
  <button class="btn primary small" id="sendBtn">Send to teacher</button>
  <a class="btn ghost small" href="appraisals.html">Done</a>
 </div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108h"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108j"></script>
 <script>
 let ctx=null,ap=null,T=null,areas=[],evid=[],evJ={},levels={},notes={};
 const aid=new URLSearchParams(location.search).get("id");
@@ -95,8 +95,8 @@ $("sendBtn").onclick=async()=>{if(!T.email)return showMsg($("msg"),"This teacher
   ...(lines($("targets").value).length?["Agreed targets:",...lines($("targets").value).map((x,i)=>(i+1)+". "+x),""]:[]),
   "Please let me know whether you would like another meeting to discuss this appraisal:","","I would like a meeting:",link("meeting_requested"),"","I don’t need a meeting:",link("no_meeting"),"",
   "Kind regards,",ctx.staff.full_name||"",ctx.staff.job_title||"",ctx.school.name];
- showMsg($("msg"),"Your email app is opening with the appraisal summary. Attach the Word form if you like, then press Send.","ok");
- location.href="mailto:"+encodeURIComponent(T.email)+"?subject="+encodeURIComponent("Your "+per+" appraisal")+"&body="+encodeURIComponent(body.join("\n"));};
+ const r=await deliverFeedback({observationId:aid,to:T.email,subject:"Your "+per+" appraisal",lines:body});
+ if(r==="sent")showMsg($("msg"),"Appraisal summary emailed to "+T.full_name+". Their reply will come to your email.","ok");};
 $("wordBtn").onclick=async()=>{if(!window.JSZip)return showMsg($("msg"),"The Word maker didn’t load. Check your connection and refresh.","err");
  const e=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
  const run=(t,o={})=>`<w:r><w:rPr>${o.b?"<w:b/>":""}<w:color w:val="${o.c||"222222"}"/><w:sz w:val="${o.sz||20}"/></w:rPr><w:t xml:space="preserve">${e(t)}</w:t></w:r>`;

@@ -46,3 +46,21 @@ function headerButtons(links){ // replaces the header button with Dashboard/othe
 }
 
 const SUBJECTS = ["Unit of Inquiry","English","Maths","Science","Arabic","Islamic Education","Social Studies","Moral Education","Art","Music","PE","Computing","French","Read Write Inc.","Library"];
+
+// Sends feedback automatically from feedback@ via the GrowNest email function; falls back to the email app.
+async function deliverFeedback(o){
+  const cut = o.lines.findIndex(l => /^Please let me know/.test(l));
+  const core = cut > 0 ? o.lines.slice(0, cut) : o.lines;
+  try {
+    const {data, error} = await sb.functions.invoke("grownest-mail", {body: {action: "send", observation_id: o.observationId, subject: o.subject, lines: core, attachment: o.attachment || null}});
+    if (error) { let m = error.message; try { const j = await error.context.json(); if (j && j.error) m = j.error; } catch (_) {} throw new Error(m); }
+    if (data && data.error) throw new Error(data.error);
+    return "sent";
+  } catch (e) {
+    console.warn(e);
+    if (!confirm("GrowNest couldn’t send the email automatically (" + (e.message || e) + ").\n\nOpen your email app with the feedback instead?")) return "cancelled";
+    location.href = "mailto:" + encodeURIComponent(o.to) + "?subject=" + encodeURIComponent(o.subject) + "&body=" + encodeURIComponent(o.lines.join("\n"));
+    return "mailto";
+  }
+}
+function blobToBase64(b){ return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(",")[1]); fr.onerror = rej; fr.readAsDataURL(b); }); }
