@@ -6,6 +6,7 @@ async function init(){
   ctx = await requireStaff(); if (!ctx) return;
   headerButtons([["app.html","Dashboard"],["sef.html","SEF evidence"]]);
   $("schoolName").textContent = ctx.school.name;
+  renderLogo();
   if (!["school_admin","leader"].includes(ctx.staff.role)) {
     $("editor").classList.add("hide");
     showMsg($("msg"), "Only school admins and leaders can change the phases. Ask your school admin if they need updating.", "info");
@@ -59,4 +60,32 @@ $("savePhases").onclick = async () => {
   $("savePhases").disabled = false;
   showMsg($("msg"), "Phases saved. SEF evidence will now be grouped by these phases.", "ok");
 };
+function renderLogo(){
+  const p = ctx.school.logo_path, admin = ctx.staff.role === "school_admin";
+  $("logoBox").innerHTML = (p ? `<img src="${logoUrl(p)}" alt="School logo" style="max-height:90px;max-width:260px;display:block;margin:6px 0 12px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px">` : '<p class="muted">No logo yet. GrowNest’s logo is used on forms until you add one.</p>')
+    + (admin ? `<label class="btn ghost small" style="cursor:pointer">${p ? "Change logo" : "Upload logo"}<input type="file" id="logoFile" accept="image/png,image/jpeg" class="hide"></label>${p ? ' <button class="btn ghost small" id="logoDel" style="color:var(--danger)">Remove logo</button>' : ""}<p class="muted" style="font-size:.85rem;margin-top:8px">PNG or JPG. It appears on Word forms and on emails to teachers.</p>` : '<p class="muted" style="font-size:.85rem">Only school admins can change the logo.</p>');
+  const f = $("logoFile"); if (f) f.onchange = () => uploadLogo(f.files[0]);
+  const d = $("logoDel"); if (d) d.onclick = removeLogo;
+}
+async function uploadLogo(file){
+  if (!file) return;
+  try {
+    const img = await createImageBitmap(file), k = Math.min(1, 600 / Math.max(img.width, img.height));
+    const cv = document.createElement("canvas"); cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+    cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+    const blob = await new Promise(r => cv.toBlob(r, "image/png"));
+    const path = ctx.school.id + "/logo-" + Date.now() + ".png", old = ctx.school.logo_path;
+    const up = await sb.storage.from("school-logos").upload(path, blob, {contentType: "image/png", upsert: true}); if (up.error) throw up.error;
+    const {error} = await sb.from("schools").update({logo_path: path}).eq("id", ctx.school.id); if (error) throw error;
+    if (old) sb.storage.from("school-logos").remove([old]).catch(() => {});
+    ctx.school.logo_path = path; renderLogo(); showMsg($("msg"), "Logo saved. It will appear on Word forms and teacher emails.", "ok");
+  } catch (e) { showMsg($("msg"), friendly(e), "err"); }
+}
+async function removeLogo(){
+  if (!confirm("Remove your school logo?")) return;
+  const old = ctx.school.logo_path;
+  const {error} = await sb.from("schools").update({logo_path: null}).eq("id", ctx.school.id); if (error) return showMsg($("msg"), friendly(error), "err");
+  if (old) sb.storage.from("school-logos").remove([old]).catch(() => {});
+  ctx.school.logo_path = null; renderLogo(); showMsg($("msg"), "Logo removed.", "ok");
+}
 init();

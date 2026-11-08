@@ -4,6 +4,7 @@ const GN_KEY = "sb_publishable_aEQ4MVt00kNu8PaVtrNnqQ_9guhxPYM";
 const sb = window.supabase.createClient(GN_URL, GN_KEY);
 const SITE = location.origin + location.pathname.replace(/[^/]*$/, "");
 const $ = id => document.getElementById(id);
+const logoUrl = p => p ? GN_URL + "/storage/v1/object/public/school-logos/" + p : "";
 function esc(s){return String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function showMsg(el, text, type="info"){el.className="msg "+type; el.textContent=text; el.classList.remove("hide");}
 if (typeof window.t !== "function") window.t = (en, ar) => en;

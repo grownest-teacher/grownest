@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108p"><title>Formal observation · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#4A2C5E"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="GrowNest"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108q"><title>Formal observation · GrowNest</title><style>
 main.obs{padding:22px 20px 170px}
 .crit{display:grid;grid-template-columns:30px 1fr;background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:14px;overflow:hidden}
 .spine{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:600;font-size:.7rem;letter-spacing:.06em;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px 0}
@@ -27,7 +27,7 @@ main.obs{padding:22px 20px 170px}
 .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
 textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;width:100%;min-height:80px}
 @media (max-width:640px){.checks{grid-template-columns:1fr}.lv span{display:none}.lv b{font-size:1.3rem}.crit{grid-template-columns:22px 1fr}.crit-body{padding:12px}.bar-in{padding:8px 12px}}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108p"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108p"></script><link rel="stylesheet" href="rtl-app.css?v=20261108p"></head><body>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108q"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108q"></script><link rel="stylesheet" href="rtl-app.css?v=20261108q"></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap obs">
  <h1>Formal observation</h1>
@@ -89,7 +89,7 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
  <button class="btn primary small" id="sendBtn">Send to teacher</button>
  <a class="btn ghost small" href="observations.html">Done</a>
 </div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108p"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108q"></script>
 <script>
 let ctx=null, obs=null, teachers=[], inds=[], stmts=[], judg={}, ticked=new Set(), evidence=[];
 const AREA_COL={"Students’ achievement":"#6F9E6B","Personal development":"#9C84C4","Teaching and assessment":"#4A2C5E"};const AREA_LBL={"Students’ achievement":"Achievement","Personal development":"Personal","Teaching and assessment":"Teaching"};
@@ -227,7 +227,7 @@ function teacherOf(){return teachers.find(x=>x.id===obs.teacher_id)||obs.teacher
 async function makeObsDoc(){const c=compile(),t=teacherOf();
   const toBytes=async b=>new Uint8Array(await b.arrayBuffer());
   const dims=async b=>{try{const bm=await createImageBitmap(b);return [bm.width,bm.height];}catch{return [1600,1200];}};
-  let logo=null;try{const lb=await (await fetch("logo-header.png")).blob();const [w,h]=await dims(lb);logo={bytes:await toBytes(lb),w,h};}catch{}
+  let logo=null;try{const lb=await (await fetch(ctx.school.logo_path?logoUrl(ctx.school.logo_path):"logo-header.png")).blob();const [w,h]=await dims(lb);logo={bytes:await toBytes(lb),w,h};}catch{try{const lb=await (await fetch("logo-header.png")).blob();const [w,h]=await dims(lb);logo={bytes:await toBytes(lb),w,h};}catch{}}
   const photos=[];for(const ev of evidence){try{const {data,error}=await sb.storage.from("evidence").download(ev.storage_path);if(error)throw error;const [w,h]=await dims(data);
    const ind=inds.find(i=>i.code===ev.indicator_code);photos.push({bytes:await toBytes(data),w,h,caption:ev.caption||"",ind:ind?ind.code+" "+ind.title:""});}catch(e){console.warn(e);}}
   const ar=teacherLang(t)==="ar";
@@ -277,7 +277,7 @@ $("wordBtn").onclick=async()=>{if(!obs)return;if(!window.JSZip)return showMsg($(
  try{const c=compile(),t=teacherOf();
   const toBytes=async b=>new Uint8Array(await b.arrayBuffer());
   const dims=async b=>{try{const bm=await createImageBitmap(b);return [bm.width,bm.height];}catch{return [1600,1200];}};
-  let logo=null;try{const lb=await (await fetch("logo-header.png")).blob();const [w,h]=await dims(lb);logo={bytes:await toBytes(lb),w,h};}catch{}
+  let logo=null;try{const lb=await (await fetch(ctx.school.logo_path?logoUrl(ctx.school.logo_path):"logo-header.png")).blob();const [w,h]=await dims(lb);logo={bytes:await toBytes(lb),w,h};}catch{try{const lb=await (await fetch("logo-header.png")).blob();const [w,h]=await dims(lb);logo={bytes:await toBytes(lb),w,h};}catch{}}
   const photos=[];for(const ev of evidence){try{const {data,error}=await sb.storage.from("evidence").download(ev.storage_path);if(error)throw error;const [w,h]=await dims(data);
    const ind=inds.find(i=>i.code===ev.indicator_code);photos.push({bytes:await toBytes(data),w,h,caption:ev.caption||"",ind:ind?ind.code+" "+ind.title:""});}catch(e){console.warn(e);}}
   const ar=teacherLang(t)==="ar";

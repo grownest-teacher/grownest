@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108p"><title>GrowNest</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108p"></script><link rel="stylesheet" href="rtl-app.css?v=20261108p"></head><body>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#4A2C5E"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="GrowNest"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108q"><title>GrowNest</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108q"></script><link rel="stylesheet" href="rtl-app.css?v=20261108q"></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="#">Sign out</a></div></header>
 <main class="wrap" style="padding:28px 20px 60px">
  <div id="loading" class="msg info">Loading GrowNest…</div>
@@ -6,6 +6,7 @@
  <section id="waiting" class="card narrow hide"></section>
  <section id="dash" class="hide">
   <h1 id="hello"></h1><p class="muted" id="schoolLine"></p>
+  <div id="startBox" class="card hide" style="margin-top:18px;border-color:var(--sage)"></div>
   <div class="grid" style="margin:22px 0">
    <a class="tile" href="teachers.html" style="text-decoration:none;color:inherit;border-color:var(--lilac)"><h3>Teachers</h3><p class="muted">Add teachers with their subjects, classes and email.</p><span class="soon" style="background:var(--plum);color:#fff">Open</span></a>
    <a class="tile" href="walks.html" style="text-decoration:none;color:inherit;border-color:var(--lilac)"><h3>Learning walks</h3><p class="muted">Short visits focused on chosen MOE indicators.</p><span class="soon" style="background:var(--plum);color:#fff">Open</span></a>
@@ -29,7 +30,7 @@
   </section>
  </section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108p"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108q"></script>
 <script>
 async function load(){
  const {data:{session}}=await sb.auth.getSession();
@@ -60,6 +61,25 @@ async function load(){
  if(staff.role==="school_admin"&&staff.active){$("adminBox").classList.remove("hide");$("joinCode").textContent=school.join_code;loadPendingStaff(staff.school_id);}
  if(isOwner){$("platformBox").classList.remove("hide");loadPendingSchools();loadDemos();}
  if(staff.active&&school&&school.status==="active")loadMeetings(staff.school_id);
+ if(lead&&staff.active&&school&&school.status==="active")loadStart(staff,school);
+}
+async function loadStart(staff,school){
+ const key="gn_start_done_"+school.id;try{if(localStorage.getItem(key))return;}catch(_){}
+ const cnt=async q=>{const r=await q;return r.count||0;};
+ const [nt,np,ns,no]=await Promise.all([cnt(sb.from("teachers").select("id",{count:"exact",head:true}).eq("school_id",school.id)),cnt(sb.from("school_phases").select("id",{count:"exact",head:true}).eq("school_id",school.id)),
+  cnt(sb.from("staff").select("id",{count:"exact",head:true}).eq("school_id",school.id)),cnt(sb.from("observations").select("id",{count:"exact",head:true}).eq("school_id",school.id))]);
+ const admin=staff.role==="school_admin";
+ const steps=[[nt>0,"Add your teachers","Add them one by one or import the Excel template, with each teacher’s email and feedback language.","teachers.html","Open Teachers"],
+  [np>0,"Set your school’s phases","So observation evidence is grouped by phase, as in your SEF.","settings.html","Open School settings"],
+  [!!school.logo_path,"Add your school logo","It appears on Word forms and emails to teachers.","settings.html",admin?"Upload logo":"Ask your school admin"],
+  [ns>1,"Invite your observers and leaders","Share your school code. You approve each person before they can sign in.",admin?"staff.html":"app.html",admin?"Open Staff":"Ask your school admin"],
+  [no>0,"Do your first observation or learning walk","Try it on an iPad in a real lesson, then send the feedback to the teacher.","walks.html","Start a learning walk"]];
+ const done=steps.filter(s=>s[0]).length;if(done===steps.length){try{localStorage.setItem(key,"1");}catch(_){}return;}
+ $("startBox").innerHTML=`<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h2 style="margin:0">Getting started</h2><span class="muted" style="font-size:.9rem">${done} of ${steps.length} done</span></div>
+  <div style="height:8px;background:var(--mist);border-radius:99px;margin:12px 0 6px;overflow:hidden"><div style="height:100%;width:${Math.round(done/steps.length*100)}%;background:var(--sage)"></div></div>
+  ${steps.map(([ok,t,d,h,btn])=>`<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)"><span style="flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;${ok?"background:var(--sage);color:#fff":"border:2px solid var(--line);color:transparent"}">✓</span><div style="flex:1"><b style="${ok?"color:var(--muted);text-decoration:line-through":""}">${t}</b><div class="muted" style="font-size:.88rem">${d}</div></div>${ok?"":`<a class="btn ghost small" href="${h}">${btn}</a>`}</div>`).join("")}
+  <p style="margin:12px 0 0"><button class="btn ghost small" id="hideStart">Hide this list</button></p>`;
+ $("startBox").classList.remove("hide");$("hideStart").onclick=()=>{try{localStorage.setItem(key,"1");}catch(_){}$("startBox").classList.add("hide");};
 }
 async function loadMeetings(sid){
  const {data,error}=await sb.from("observations").select("id,observed_on,subject,responded_at,teachers(full_name),staff(full_name)").eq("school_id",sid).eq("teacher_response","meeting_requested").eq("meeting_done",false).order("responded_at");
@@ -93,5 +113,6 @@ document.addEventListener("click",async e=>{
  if(sc){e.target.disabled=true;const {error}=await sb.from("schools").update({status:"active"}).eq("id",sc);if(error)return fail(error);e.target.closest("tr").remove();}
 });
 const hdrBtn=document.querySelector("header.top .btn");hdrBtn.textContent="Sign out";hdrBtn.href="#";hdrBtn.onclick=e=>{e.preventDefault();signOut();};
+if(window.gnAppLang){const sw=document.createElement("button");sw.type="button";sw.className="langsw notr";sw.textContent=gnLang()==="ar"?"English":"العربية";const box=document.createElement("div");box.style.cssText="display:flex;gap:6px;align-items:center";hdrBtn.replaceWith(box);box.append(sw,hdrBtn);}
 load();</script>
 </body></html>
