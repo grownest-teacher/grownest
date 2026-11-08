@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108c"><title>Formal observation · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108d"><title>Formal observation · GrowNest</title><style>
 main.obs{padding:22px 20px 170px}
 .crit{display:grid;grid-template-columns:30px 1fr;background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:14px;overflow:hidden}
 .spine{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:600;font-size:.7rem;letter-spacing:.06em;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px 0}
@@ -27,7 +27,7 @@ main.obs{padding:22px 20px 170px}
 .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
 textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;width:100%;min-height:80px}
 @media (max-width:640px){.checks{grid-template-columns:1fr}.lv span{display:none}.lv b{font-size:1.3rem}.crit{grid-template-columns:22px 1fr}.crit-body{padding:12px}.bar-in{padding:8px 12px}}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108c"></script></head><body>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108d"></script></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap obs">
  <h1>Formal observation</h1>
@@ -55,8 +55,22 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
   <section class="card">
    <h2>Photo evidence</h2>
    <p class="muted">Take photos of students’ work, displays or activities. Link each one to an indicator and add a caption.</p>
-   <label class="btn ghost" for="photoIn">Take or add photo</label>
-   <input id="photoIn" type="file" accept="image/*" capture="environment" multiple class="hide">
+   <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button type="button" class="btn primary" id="camBtn">📷 Take photo</button>
+    <label class="btn ghost" for="photoIn">Upload photo</label>
+   </div>
+   <input id="photoIn" type="file" accept="image/*" multiple class="hide">
+   <input id="camIn" type="file" accept="image/*" capture="environment" class="hide">
+   <div id="camModal" class="hide" style="position:fixed;inset:0;background:rgba(20,10,30,.85);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div style="background:#fff;border-radius:18px;padding:14px;max-width:720px;width:100%">
+     <video id="camVideo" playsinline autoplay muted style="width:100%;border-radius:12px;background:#000;max-height:70vh"></video>
+     <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+      <button type="button" class="btn primary" id="snapBtn">Capture</button>
+      <button type="button" class="btn ghost" id="flipBtn">Switch camera</button>
+      <button type="button" class="btn ghost" id="camClose">Close</button>
+     </div>
+    </div>
+   </div>
    <div class="photos" id="photos"></div>
   </section>
   <p style="margin-top:20px"><button class="btn ghost small" id="delBtn" style="color:var(--danger)">Delete this draft</button></p>
@@ -70,7 +84,7 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
  <button class="btn primary small" id="sendBtn">Send to teacher</button>
  <a class="btn ghost small" href="observations.html">Done</a>
 </div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108c"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108d"></script>
 <script>
 let ctx=null, obs=null, teachers=[], inds=[], stmts=[], judg={}, ticked=new Set(), evidence=[];
 const AREA_COL={"Students’ achievement":"#6F9E6B","Personal development":"#9C84C4","Teaching and assessment":"#4A2C5E"};const AREA_LBL={"Students’ achievement":"Achievement","Personal development":"Personal","Teaching and assessment":"Teaching"};
@@ -164,13 +178,28 @@ async function renderPhotos(){
   <input data-ev="${ev.id}" data-f="caption" placeholder="Caption" value="${esc(ev.caption||"")}">
   <button class="btn ghost small" data-delev="${ev.id}" style="color:var(--danger)">Remove</button></div></div>`));
  $("photos").innerHTML=html.join("");}
-$("photoIn").onchange=async e=>{const files=[...e.target.files];e.target.value="";
- for(const f of files){try{$("saveSt").textContent="Uploading photo…";const blob=await compress(f);
+async function addPhoto(f){try{$("saveSt").textContent="Uploading photo…";const blob=await compress(f);
   const path=`${ctx.school.id}/${obs.id}/${crypto.randomUUID()}.jpg`;
   const up=await sb.storage.from("evidence").upload(path,blob,{contentType:"image/jpeg"});if(up.error)throw up.error;
   const {data,error}=await sb.from("evidence").insert({observation_id:obs.id,school_id:ctx.school.id,storage_path:path}).select().single();if(error)throw error;
   evidence.push(data);await renderPhotos();$("saveSt").textContent="Photo saved";
- }catch(err){console.error(err);showMsg($("msg"),"A photo couldn’t be uploaded: "+friendly(err),"err");}}};
+ }catch(err){console.error(err);showMsg($("msg"),"A photo couldn’t be uploaded: "+friendly(err),"err");}}
+$("photoIn").onchange=async e=>{const files=[...e.target.files];e.target.value="";for(const f of files)await addPhoto(f);};
+$("camIn").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(f)await addPhoto(f);};
+// Camera: phones and iPads open the camera directly; computers use the webcam in a window
+const isTouch=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+let stream=null,facing="environment";
+async function startCam(){stopCam();stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:1920},height:{ideal:1080}},audio:false});$("camVideo").srcObject=stream;}
+function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}}
+$("camBtn").onclick=async()=>{
+ if(isTouch||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("camIn").click();return;}
+ try{$("camModal").classList.remove("hide");await startCam();}
+ catch(err){console.error(err);$("camModal").classList.add("hide");stopCam();
+  showMsg($("msg"),"The camera couldn’t open. Allow camera access for this site in your browser settings, or use Upload photo.","err");}};
+$("flipBtn").onclick=async()=>{facing=facing==="environment"?"user":"environment";try{await startCam();}catch(e){}};
+$("camClose").onclick=()=>{stopCam();$("camModal").classList.add("hide");};
+$("snapBtn").onclick=async()=>{const v=$("camVideo");if(!v.videoWidth)return;const cv=document.createElement("canvas");cv.width=v.videoWidth;cv.height=v.videoHeight;cv.getContext("2d").drawImage(v,0,0);
+ const blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",0.9));$("snapBtn").textContent="Saved ✓";setTimeout(()=>$("snapBtn").textContent="Capture",900);await addPhoto(blob);};
 let pt=null;
 $("photos").addEventListener("input",e=>{const id=e.target.dataset.ev;if(!id)return;const f=e.target.dataset.f,v=e.target.value;const ev=evidence.find(x=>x.id===id);ev[f]=v||null;
  clearTimeout(pt);pt=setTimeout(()=>save(()=>sb.from("evidence").update({[f]:v||null}).eq("id",id)),500);});
