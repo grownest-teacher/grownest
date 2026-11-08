@@ -1,5 +1,65 @@
 <!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108j"><title>GrowNest · See teaching. Grow teachers.</title><meta name="description" content="GrowNest helps UAE schools run learning walks, formal observations and appraisals aligned to the MOE inspection framework. Part of ThinkNest."><style>
 .lp section{padding:64px 0}
+.nav4{background:#F8F4FC;position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(74,44,94,.06)}
+.nav4 .wrap{display:flex;align-items:center;gap:24px;padding-top:10px;padding-bottom:10px}
+.nav4 .brand img{height:60px;display:block}
+.nav4 nav{display:flex;gap:30px;margin-left:auto}
+.nav4 nav a{text-decoration:none;color:var(--ink);font-weight:500;padding:6px 0;border-bottom:3px solid transparent}
+.nav4 nav a.on{color:var(--plum);font-weight:600;border-bottom-color:#7E57C2}
+.nav4 .signin{border-radius:99px;padding:10px 20px}
+.hero4{position:relative;background:linear-gradient(180deg,#F8F4FC 0%,#F3ECFA 100%);overflow:hidden;padding-bottom:70px}
+.hero4 .wrap,.nav4 .wrap{max-width:1260px}
+.h4grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center;padding-top:36px;position:relative;z-index:2}
+.h4text h1{font-size:3.6rem;line-height:1.05;margin:0;letter-spacing:-.02em}
+.h4text .l1{color:#2E1A40}
+.h4text .l2{background:linear-gradient(90deg,#7E57C2,#9C6ADE 60%,#B48BE8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.spark{display:inline-block;position:relative;width:46px;height:40px;vertical-align:top;margin-left:6px}
+.spark i{position:absolute;width:5px;height:16px;background:#8BC34A;border-radius:4px}
+.spark i:nth-child(1){left:6px;top:0;transform:rotate(20deg)}.spark i:nth-child(2){left:20px;top:8px;transform:rotate(50deg)}.spark i:nth-child(3){left:24px;top:24px;transform:rotate(85deg)}
+.swoosh{width:62%;max-width:320px;display:block;margin:4px 0 18px 26%}
+.lead1{font-size:1.15rem;color:var(--ink);margin:0 0 12px}
+.lead2{color:#4B3D5C;margin:0;max-width:520px}
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}
+.btn.big{padding:14px 22px;font-size:1.02rem;border-radius:12px}
+.btn.outline{background:#fff;color:var(--plum);box-shadow:inset 0 0 0 2px var(--plum)}
+.btn.primary{background:linear-gradient(90deg,#5B3A86,#7E57C2)}
+.fam{margin-top:20px;color:#4B3D5C}.fam b{color:var(--plum)}
+.plane{width:70%;max-width:380px;margin-top:6px;display:block}
+.h4vis{position:relative;padding:10px 0 70px}
+.blobback{position:absolute;inset:-16px -22px 60px -8px;background:linear-gradient(135deg,#C9B3EA,#E7DBF6);border-radius:34% 66% 42% 58%/46% 38% 62% 54%;transform:rotate(-3deg)}
+.blob{position:relative;border-radius:30% 70% 38% 62%/42% 34% 66% 58%;overflow:hidden;border:6px solid #fff;box-shadow:0 18px 40px rgba(74,44,94,.18);aspect-ratio:1.42/1}
+.blob img{width:100%;height:100%;object-fit:cover;object-position:35% 40%;display:block}
+.badge{position:absolute;right:-22px;bottom:110px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#E4F5C9,#B6DD7E);border:6px solid #fff;box-shadow:0 12px 28px rgba(74,44,94,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;color:#2E1A40;font-size:1.02rem;line-height:1.2}
+.badge .tick{width:40px;height:40px;border-radius:50%;background:#5E9C3A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:8px;font-size:1.2rem}
+.strip{position:absolute;left:-20px;bottom:30px;background:#fff;border-radius:22px;box-shadow:0 14px 30px rgba(74,44,94,.16);display:flex;padding:14px 18px;gap:6px}
+.strip div{display:flex;align-items:center;gap:10px;padding:0 14px;font-weight:600;font-size:.92rem;color:#2E1A40;line-height:1.2}
+.strip div+div{border-left:1px solid var(--line)}
+.pill{position:absolute;right:-10px;bottom:-34px;background:#fff;border-radius:99px;box-shadow:0 10px 24px rgba(74,44,94,.14);display:flex;align-items:center;gap:12px;padding:8px 18px 8px 8px;font-size:.95rem;color:#2E1A40}
+.pill .g{white-space:nowrap;background:#C5E89A;color:#2E4A12;font-weight:700;border-radius:99px;padding:7px 16px}
+.wave{position:absolute;left:0;right:0;bottom:0;width:100%;height:110px;z-index:1}
+@media (max-width:1000px){.nav4 nav{display:none}.nav4 .signin{margin-left:auto}.strip{left:0}.badge{width:140px;height:140px;font-size:.9rem;bottom:110px}}
+@media (max-width:860px){.h4grid{grid-template-columns:1fr}.h4text h1{font-size:2.6rem}.h4vis{margin-top:10px}.plane{display:none}}
+@media (max-width:520px){.h4text h1{font-size:2.2rem}.spark{width:34px;height:30px}.strip{position:relative;left:0;bottom:0;margin-top:-30px;padding:10px 6px}.strip div{padding:0 8px;font-size:.8rem;gap:6px}.strip svg{width:26px;height:26px}.badge{width:116px;height:116px;font-size:.78rem;right:-4px;top:-20px;bottom:auto;padding:10px}.badge .tick{width:30px;height:30px}.pill{position:relative;margin-top:14px;right:auto;bottom:auto;font-size:.82rem}.h4vis{padding-bottom:10px}.nav4 .brand img{height:42px}.hero4{padding-bottom:60px}}
+
+.herob{background:radial-gradient(1200px 500px at 85% 10%,#5E3B75 0%,#4A2C5E 55%,#3B2249 100%);color:#fff;overflow:hidden}
+.hero3{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding-top:44px;padding-bottom:56px}
+.hero3 .hlogo{height:84px;width:auto;margin:0 0 10px -18px;display:block}
+.hero3 h1{color:#fff;font-size:3.1rem;line-height:1.06;margin-bottom:16px}
+.hero3 p{color:#E3D6F2;font-size:1.12rem;max-width:520px}
+.hero3 .small{font-size:.9rem;margin-top:22px;color:#CBB8E6}.hero3 .small b{color:#fff}
+.hero3 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.wbtn{background:#fff;color:var(--plum)}.wbtn:hover{background:#F4EEF9}
+.obtn{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.5)}
+.hill{position:relative}
+.hill .photo{border-radius:28px;overflow:hidden;border:6px solid rgba(255,255,255,.14);box-shadow:0 24px 50px rgba(0,0,0,.35)}
+.hill .photo img{width:100%;height:auto;display:block}
+.float{position:absolute;background:#fff;color:var(--ink);border-radius:14px;padding:10px 14px;display:flex;gap:10px;align-items:center;font-size:.85rem;font-weight:600;box-shadow:0 12px 28px rgba(0,0,0,.25)}
+.float.f1{left:-22px;bottom:34px}.float.f2{right:-14px;top:-16px}
+.float.f2 b{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--sage);color:#fff;align-items:center;justify-content:center;font-size:.85rem}
+.peek{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px;align-items:start}
+.peek .mock{box-shadow:0 10px 28px rgba(74,44,94,.10)}
+.mbtn{border-radius:10px;padding:10px 12px;font-weight:600;font-size:.88rem;text-align:center;margin-bottom:8px}
+.cap{margin:14px 0 0;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
 .lp h2{font-size:2rem;margin-bottom:10px}
 .lp .lead{font-size:1.1rem;color:var(--muted);max-width:640px}
 .eyebrow{display:inline-block;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
@@ -43,28 +103,44 @@
 .lpfoot .wrap{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
 .tn{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.95rem}
 .tn a{font-weight:600}
-@media (max-width:900px){.feat{grid-template-columns:repeat(2,1fr)}.who{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:760px){.hero2{grid-template-columns:1fr;padding-top:28px}.hero2 h1{font-size:2.2rem}.steps,.founders{grid-template-columns:1fr}.lp section{padding:44px 0}.band{padding:28px 22px}.mock .bird{width:58px;left:-10px;top:-24px}}
+@media (max-width:900px){.peek{grid-template-columns:1fr 1fr}.feat{grid-template-columns:repeat(2,1fr)}.who{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.hero3{grid-template-columns:1fr;padding-top:24px;gap:10px}.hero3 h1{font-size:2.3rem}.hero3 .hlogo{height:64px}.float.f1{left:8px;bottom:-14px}.float.f2{right:8px;top:-14px}.hill{margin-top:18px}.peek{grid-template-columns:1fr}.hero2{grid-template-columns:1fr;padding-top:28px}.hero2 h1{font-size:2.2rem}.steps,.founders{grid-template-columns:1fr}.lp section{padding:44px 0}.band{padding:28px 22px}.mock .bird{width:58px;left:-10px;top:-24px}}
 @media (max-width:480px){.feat,.who{grid-template-columns:1fr}}
 </style></head><body>
-<header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="login.html">Sign in</a></div></header>
+
+<header class="nav4"><div class="wrap">
+ <a href="index.html" class="brand"><img src="logo-header.png" alt="GrowNest"></a>
+ <nav><a href="index.html" class="on">Home</a><a href="#how">How it works</a><a href="#features">Features</a><a href="#founders">Founders</a></nav>
+ <a class="btn primary signin" href="login.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Sign in</a>
+</div></header>
 <main class="lp">
-<div class="wrap">
- <div class="hero2">
-  <div><span class="eyebrow">Lesson observation for UAE schools</span>
-   <h1>See teaching.<br>Grow teachers.</h1>
-   <p>GrowNest brings learning walks, formal observations and appraisals together in one place, aligned to the UAE MOE inspection framework. Observe on your iPad or phone, keep the evidence, and send teachers their feedback in one tap.</p>
-   <div class="actions"><a class="btn primary" href="register.html">Register your school</a><a class="btn ghost" href="#how">See how it works</a></div></div>
-  <div class="mock" aria-hidden="true">
-   <div class="row"><b style="color:var(--plum)">Progress in the lesson</b><span class="lchip">MOE 1.2</span></div>
-   <div class="lv6"><span class="" style="background:#4F8A4B;color:#fff">6</span><span class="on" style="background:#8BBF86;color:#1E3A1C">5</span><span class="" style="background:#CFE6CA;color:#1E3A1C">4</span><span class="" style="background:#F6D892;color:#4A3500">3</span><span class="" style="background:#F3B08A;color:#4A2000">2</span><span class="" style="background:#E07C7C;color:#fff">1</span></div>
-   <div class="tick"><i></i>Most students made better than expected progress against the lesson objectives.</div>
-   <div class="tick"><i></i>Learning objectives were clear, and most students could show what they had achieved.</div>
-   <div class="row" style="margin:14px 0 0"><span class="muted" style="font-size:.85rem">Overall judgement</span><span class="lchip" style="background:#8BBF86;color:#1E3A1C">5 · Very good</span></div>
+<div class="hero4"><div class="wrap h4grid">
+  <div class="h4text">
+   <h1><span class="l1">See teaching.</span><span class="spark" aria-hidden="true"><i></i><i></i><i></i></span><br><span class="l2">Grow teachers.</span></h1>
+   <svg class="swoosh" viewBox="0 0 300 20" aria-hidden="true"><path d="M4 15 C90 2 200 2 296 12" fill="none" stroke="#8BC34A" stroke-width="5" stroke-linecap="round"/></svg>
+   <p class="lead1">The lesson observation platform for UAE schools.</p>
+   <p class="lead2">Learning walks, formal observations and appraisals in one place, aligned to the MOE inspection framework, with feedback sent to teachers in one tap.</p>
+   <div class="actions">
+    <a class="btn primary big" href="register.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2"/><path d="M9 12a22 22 0 0 1 11-9 22 22 0 0 1-9 11z"/><path d="M9 12H5l2-4h5M12 15v4l4-2v-5"/></svg>Register your school</a>
+    <a class="btn outline big" href="#how"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M7 4l13 8-13 8z"/></svg>See how it works</a>
+   </div>
+   <p class="fam">Part of the <b>ThinkNest</b> family</p>
+   <svg class="plane" viewBox="0 0 420 150" aria-hidden="true"><path d="M10 140 C70 90 150 120 200 110 C250 100 230 60 205 70 C180 82 215 120 280 92" fill="none" stroke="#7E57C2" stroke-width="2.5" stroke-dasharray="7 8" stroke-linecap="round"/><path d="M300 70 L410 20 L360 110 L340 82 Z M340 82 L410 20" fill="#fff" stroke="#7E57C2" stroke-width="3" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="h4vis">
+   <div class="blobback"></div>
+   <div class="blob"><img src="hero-classroom.jpg" alt="A teacher leading a Unit of Inquiry lesson while a school leader observes and takes notes"></div>
+   <div class="badge"><span class="tick">✓</span><b>Feedback sent to the teacher</b></div>
+   <div class="strip">
+    <div><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#4A2C5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 10l1.5 1.5L12.5 9M8.5 15l1.5 1.5 2.5-2.5M14.5 10.5h2M14.5 15.5h2"/></svg><span>Observe<br>&amp; reflect</span></div>
+    <div><svg width="34" height="34" viewBox="0 0 24 24" fill="#4A2C5E"><rect x="3" y="14" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="12" rx="1"/><rect x="17" y="4" width="4" height="17" rx="1"/></svg><span>Give<br>feedback</span></div>
+    <div><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M12 21V11" stroke="#6BA342" stroke-width="2.2"/><path d="M12 13C12 8 8 6 4 6c0 5 4 7 8 7z" fill="#8BC34A"/><path d="M12 11c0-4 3-6 7-6 0 4-3 6-7 6z" fill="#6BA342"/></svg><span>Support<br>growth</span></div>
+   </div>
+   <div class="pill"><span class="g">5 – Very good</span><span>3.1.3 Questioning and dialogue</span></div>
   </div>
  </div>
+ <svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 70 C240 10 420 120 720 80 C1000 40 1200 110 1440 60 L1440 120 L0 120 Z" fill="#EDE4F6"/></svg>
 </div>
-
 <section id="how"><div class="wrap">
  <span class="eyebrow">How it works</span><h2>From the classroom to growth, in three steps</h2>
  <div class="steps">
@@ -75,6 +151,35 @@
 </div></section>
 
 <section style="padding-top:0"><div class="wrap">
+ <span class="eyebrow">A look inside</span><h2>Simple on an iPad, powerful for leaders</h2>
+ <div class="peek">
+  <div class="mock">
+   <div class="row"><b style="color:var(--plum)">Progress in the lesson</b><span class="lchip">MOE 1.2</span></div>
+   <div class="lv6"><span class="" style="background:#4F8A4B;color:#fff">6</span><span class="on" style="background:#8BBF86;color:#1E3A1C">5</span><span class="" style="background:#CFE6CA;color:#1E3A1C">4</span><span class="" style="background:#F6D892;color:#4A3500">3</span><span class="" style="background:#F3B08A;color:#4A2000">2</span><span class="" style="background:#E07C7C;color:#fff">1</span></div>
+   <div class="tick"><i></i>Most students made better than expected progress against the lesson objectives.</div>
+   <div class="tick"><i></i>Learning objectives were clear, and most students could show what they had achieved.</div>
+   <div class="row" style="margin:14px 0 0"><span class="muted" style="font-size:.85rem">Overall judgement</span><span class="lchip" style="background:#8BBF86;color:#1E3A1C">5 · Very good</span></div>
+   <p class="cap">Judge each MOE indicator and tick ready-made feedback.</p>
+  </div>
+  <div class="mock">
+   <div class="row"><b style="color:var(--plum)">Your lesson observation feedback</b></div>
+   <p class="muted" style="font-size:.88rem;margin:0 0 12px">From Fatma via GrowNest</p>
+   <div class="mbtn" style="background:var(--plum);color:#fff">I would like a meeting</div>
+   <div class="mbtn" style="background:var(--mist);color:var(--plum)">I don’t need a meeting</div>
+   <div class="row" style="margin-top:12px"><span class="muted" style="font-size:.85rem">📎 Lesson observation form.docx</span></div>
+   <p class="cap">Teachers reply in one tap, with no login.</p>
+  </div>
+  <div class="mock">
+   <div class="row"><b style="color:var(--plum)">Growth over time</b><span class="lchip">Teacher record</span></div>
+   <svg viewBox="0 0 260 120" style="width:100%;height:auto"><g stroke="#E4DCEC"><line x1="10" x2="250" y1="20" y2="20"/><line x1="10" x2="250" y1="50" y2="50"/><line x1="10" x2="250" y1="80" y2="80"/><line x1="10" x2="250" y1="110" y2="110"/></g>
+    <path d="M20 92 L90 74 L160 56 L240 28" fill="none" stroke="#4A2C5E" stroke-width="3"/>
+    <circle cx="20" cy="92" r="7" fill="#F6D892" stroke="#4A2C5E" stroke-width="1.5"/><circle cx="90" cy="74" r="7" fill="#CFE6CA" stroke="#4A2C5E" stroke-width="1.5"/><circle cx="160" cy="56" r="7" fill="#8BBF86" stroke="#4A2C5E" stroke-width="1.5"/><circle cx="240" cy="28" r="7" fill="#4F8A4B" stroke="#4A2C5E" stroke-width="1.5"/></svg>
+   <p class="cap">Every observation builds each teacher’s growth record.</p>
+  </div>
+ </div>
+</div></section>
+
+<section id="features" style="padding-top:0"><div class="wrap">
  <span class="eyebrow">What’s inside</span><h2>Everything school leaders need for quality assurance</h2>
  <div class="feat">
   <div><h3>Learning walks</h3><p>Short visits focused on chosen MOE indicators, marked seen, partly seen or not yet seen, with lesson stage and time.</p></div>
