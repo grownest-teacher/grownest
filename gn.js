@@ -22,6 +22,10 @@ async function requireStaff(){
   if(!session){ location.href = "login.html"; return null; }
   const {data:staff} = await sb.from("staff").select("*, schools(*)").eq("id", session.user.id).maybeSingle();
   if(!staff || !staff.active || !staff.schools || staff.schools.status !== "active"){ location.href = "app.html"; return null; }
+  try { // "Also seen" options can be edited by the GrowNest owner
+    const {data: opts} = await sb.from("also_seen_options").select("*").eq("active", true).order("sort");
+    if (opts && opts.length) { ALSO_SEEN.length = 0; opts.forEach(o => ALSO_SEEN.push({code: o.code, label: o.label, els: o.els || []})); }
+  } catch (_) {}
   return {user: session.user, staff, school: staff.schools};
 }
 async function signOut(){ await sb.auth.signOut(); location.href = "index.html"; }
