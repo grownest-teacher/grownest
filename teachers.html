@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108f"><title>Teachers · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108g"><title>Teachers · GrowNest</title><style>
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}
 .toolbar input,.toolbar select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;min-height:44px}
 .toolbar input{flex:1;min-width:200px}
@@ -61,7 +61,7 @@
 
  <div class="card" style="padding:8px 20px"><div class="tlist" id="list"></div></div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108f"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108g"></script>
 <script>
 let ctx=null, teachers=[], editing=null, pending=[];
 const split=s=>String(s||"").split(/[,;\n]/).map(x=>x.trim()).filter(Boolean);
@@ -81,7 +81,7 @@ function render(){
  const rows=teachers.filter(t=>(f==="all"||t.status===f)&&(!q||[t.full_name,t.email,...t.subjects,...t.classes].join(" ").toLowerCase().includes(q)));
  const active=teachers.filter(t=>t.status==="active").length;
  $("schoolLine").textContent=ctx.school.name+" · "+active+" current teacher"+(active===1?"":"s");
- $("list").innerHTML=rows.length?rows.map(t=>`<div class="row ${t.status==="left"?"left":""}"><div class="who"><b>${esc(t.full_name)}${t.status==="left"?'<span class="badge-left">Left</span>':""}</b><span class="muted">${esc(t.email)} · ${t.teacher_type==="class_teacher"?"Class teacher"+(t.homeroom?" of "+esc(t.homeroom):""):"Subject teacher"}</span><div>${t.subjects.map(s=>`<span class="chip">${esc(s)}</span>`).join("")}${t.classes.map(c=>`<span class="chip sage">${esc(c)}</span>`).join("")}</div></div><button class="btn ghost small" data-edit="${t.id}">Edit</button></div>`).join("")
+ $("list").innerHTML=rows.length?rows.map(t=>`<div class="row ${t.status==="left"?"left":""}"><div class="who"><b><a href="teacher.html?id=${t.id}" style="text-decoration:none">${esc(t.full_name)}</a>${t.status==="left"?'<span class="badge-left">Left</span>':""}</b><span class="muted">${esc(t.email)} · ${t.teacher_type==="class_teacher"?"Class teacher"+(t.homeroom?" of "+esc(t.homeroom):""):"Subject teacher"}</span><div>${t.subjects.map(s=>`<span class="chip">${esc(s)}</span>`).join("")}${t.classes.map(c=>`<span class="chip sage">${esc(c)}</span>`).join("")}</div></div><a class="btn primary small" href="teacher.html?id=${t.id}">Record</a> <button class="btn ghost small" data-edit="${t.id}">Edit</button></div>`).join("")
   :`<p class="muted" style="padding:16px 0">${teachers.length?"No teachers match your search.":"No teachers yet. Tap “Add teacher” or import your staff list from Excel."}</p>`;
 }
 function openForm(t){
