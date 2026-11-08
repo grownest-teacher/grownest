@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108j"><title>Learning walk · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108l"><title>Learning walk · GrowNest</title><style>
 main.wk{padding:22px 20px 80px}
 .visit{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;border-left:6px solid var(--lilac)}
 .visit.sent{border-left-color:var(--sage)}
@@ -48,7 +48,7 @@ main.wk{padding:22px 20px 80px}
  </div>
  <p><button class="btn ghost small" id="delWalk" style="color:var(--danger)">Delete this walk</button></p>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108j"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108l"></script>
 <script>
 let ctx=null,walk=null,inds=[],teachers=[],visits=[],judg={},evid={};
 const ST={seen:"Seen",partly_seen:"Partly seen",not_seen:"Not yet seen"};
@@ -88,6 +88,7 @@ async function renderVisits(){
    ${inds.map(ind=>{const cur=jv[ind.code]||{};return `<div class="ind"><h4>${esc(ind.code)} ${esc(ind.title)}</h4><div class="seg">${[["seen","seen"],["partly_seen","partly"],["not_seen","not"]].map(([k,c])=>`<button type="button" class="${c}" data-v="${v.id}" data-ind="${ind.code}" data-s="${k}" aria-pressed="${cur.s===k}">${ST[k]}</button>`).join("")}</div>
     <input class="note" data-v="${v.id}" data-ind="${ind.code}" placeholder="What you saw (optional)" value="${esc(cur.note||"")}"></div>`;}).join("")}
    <div class="two" style="margin-top:10px"><label class="f">What went well<textarea class="note" data-vf="extra_strengths" data-v="${v.id}" rows="2">${esc(v.extra_strengths||"")}</textarea></label><label class="f">Next step<textarea class="note" data-vf="extra_development" data-v="${v.id}" rows="2">${esc(v.extra_development||"")}</textarea></label></div>
+   <div style="margin-top:10px"><span class="muted" style="font-size:.85rem;font-weight:600">Also seen (optional)</span>${alsoSeenHtml(v.also_seen||[],'data-v="'+v.id+'"')}</div>
    <div class="phs">${phs.join("")}</div>
    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn ghost small" data-cam="${v.id}">📷 Take photo</button><button class="btn ghost small" data-up="${v.id}">Upload photo</button><button class="btn primary small" data-send="${v.id}">${sent?"Send again":"Send to teacher"}</button>${sent?"":`<button class="btn ghost small" data-delv="${v.id}" style="color:var(--danger);margin-left:auto">Remove visit</button>`}</div>
   </article>`;}));
@@ -104,6 +105,8 @@ $("addVisit").onclick=async()=>{const tid=$("vTeacher").value;if(!tid)return sho
  const last=visits[visits.length-1];if(last)$("v-"+last.id).scrollIntoView({behavior:"smooth"});};
 const timers={};
 document.addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.also&&b.dataset.v){const v=visits.find(x=>x.id===b.dataset.v);const a=new Set(v.also_seen||[]);const c=b.dataset.also;a.has(c)?a.delete(c):a.add(c);v.also_seen=[...a];b.setAttribute("aria-pressed",a.has(c));
+  save(()=>sb.from("observations").update({also_seen:v.also_seen}).eq("id",v.id));return;}
  if(b.dataset.s){const v=b.dataset.v,ind=b.dataset.ind,s=b.dataset.s;const jv=judg[v]=judg[v]||{};const cur=jv[ind]=jv[ind]||{note:""};
   cur.s=cur.s===s?null:s;b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.s===cur.s));
   save(()=>sb.from("observation_judgements").upsert({observation_id:v,indicator_code:ind,walk_status:cur.s,note:cur.note||null}));renderSummary();}

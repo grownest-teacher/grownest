@@ -48,3 +48,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:30px 0}
 @media (max-width:760px){.hero{grid-template-columns:1fr;padding-top:30px}.hero h1{font-size:2rem}.features{grid-template-columns:1fr}.card{padding:20px}header.top img{height:38px}}
 .lchip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.8rem;font-weight:600;background:var(--mist);color:var(--plum);white-space:nowrap}
 label.f textarea,label.f .note{font-weight:400}
+.also{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.alsob{font:inherit;font-size:.85rem;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:7px 12px;cursor:pointer}
+.alsob[aria-pressed="true"]{background:#E5F0E3;border-color:var(--sage);color:#2D5A29;font-weight:600}
+.alsob[aria-pressed="true"]::before{content:"✓ "}

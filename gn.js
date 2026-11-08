@@ -64,3 +64,33 @@ async function deliverFeedback(o){
   }
 }
 function blobToBase64(b){ return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(",")[1]); fr.onerror = rej; fr.readAsDataURL(b); }); }
+
+// "Also seen in this lesson" options, linked to SEF elements
+const ALSO_SEEN = [
+  {code:"islamic",       label:"Islamic values reflected in the learning",           els:["2.2.1"]},
+  {code:"uae",           label:"Links to UAE heritage and culture",                  els:["2.2.2","4.2.3"]},
+  {code:"world",         label:"Understanding of other world cultures",              els:["2.2.3"]},
+  {code:"community",     label:"Community involvement or social responsibility",     els:["2.3.1"]},
+  {code:"enterprise",    label:"Enterprise, innovation or entrepreneurship",         els:["2.3.2","4.2.2"]},
+  {code:"environment",   label:"Environmental awareness or sustainability",          els:["2.3.3"]},
+  {code:"crosscurric",   label:"Cross-curricular links",                             els:["4.1.4"]},
+  {code:"enhance",       label:"Curriculum enhancement (trips, visitors, projects)", els:["4.2.2"]},
+  {code:"adapted",       label:"Curriculum adapted for different groups",            els:["4.2.1"]},
+  {code:"healthy",       label:"Safe and healthy lifestyles promoted",               els:["5.1.5","2.1.4"]},
+  {code:"send",          label:"Effective support for students of determination",   els:["5.2.4"]},
+  {code:"gifted",        label:"Challenge for gifted and talented students",         els:["5.2.4"]},
+  {code:"relationships", label:"Positive staff–student relationships",               els:["5.2.1","2.1.3"]}
+];
+function alsoSeenHtml(selected, attr){ // attr: extra data attribute string for the buttons
+  return '<div class="also">' + ALSO_SEEN.map(a => `<button type="button" class="alsob" ${attr} data-also="${a.code}" aria-pressed="${(selected||[]).includes(a.code)}">${esc(a.label)}</button>`).join("") + "</div>";
+}
+// Which school phase a class belongs to ("Grade 3A" → the phase containing "Grade 3")
+function gradeKey(s){ return String(s || "").toLowerCase().replace(/[^a-z0-9]/g, ""); }
+function phaseOf(gradeClass, phases){
+  const g = gradeKey(gradeClass);
+  for (const p of phases || []) for (const gr of p.grades || []) {
+    const k = gradeKey(gr);
+    if (k && g.startsWith(k) && !/[0-9]/.test(g.charAt(k.length))) return p.id;
+  }
+  return null;
+}

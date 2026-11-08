@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108j"><title>Formal observation · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108l"><title>Formal observation · GrowNest</title><style>
 main.obs{padding:22px 20px 170px}
 .crit{display:grid;grid-template-columns:30px 1fr;background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:14px;overflow:hidden}
 .spine{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:600;font-size:.7rem;letter-spacing:.06em;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px 0}
@@ -27,7 +27,7 @@ main.obs{padding:22px 20px 170px}
 .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
 textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;width:100%;min-height:80px}
 @media (max-width:640px){.checks{grid-template-columns:1fr}.lv span{display:none}.lv b{font-size:1.3rem}.crit{grid-template-columns:22px 1fr}.crit-body{padding:12px}.bar-in{padding:8px 12px}}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108j"></script></head><body>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108l"></script></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap obs">
  <h1>Formal observation</h1>
@@ -51,6 +51,11 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
     <label class="f">What went well (optional)<textarea class="f" id="extraS"></textarea></label>
     <label class="f">Areas for development (optional)<textarea class="f" id="extraD"></textarea></label>
    </div>
+  </section>
+  <section class="card" style="margin-bottom:16px">
+   <h2>Also seen in this lesson <span class="muted" style="font-size:.85rem;font-weight:400">(optional)</span></h2>
+   <p class="muted" style="margin-top:-6px">Tap anything you saw. This adds evidence for SEF Standards 2, 4 and 5.</p>
+   <div id="alsoBox"></div>
   </section>
   <section class="card">
    <h2>Photo evidence</h2>
@@ -84,7 +89,7 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
  <button class="btn primary small" id="sendBtn">Send to teacher</button>
  <a class="btn ghost small" href="observations.html">Done</a>
 </div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108j"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108l"></script>
 <script>
 let ctx=null, obs=null, teachers=[], inds=[], stmts=[], judg={}, ticked=new Set(), evidence=[];
 const AREA_COL={"Students’ achievement":"#6F9E6B","Personal development":"#9C84C4","Teaching and assessment":"#4A2C5E"};const AREA_LBL={"Students’ achievement":"Achievement","Personal development":"Personal","Teaching and assessment":"Teaching"};
@@ -128,7 +133,10 @@ function fillLists(){const t=teachers.find(x=>x.id===$("teacher").value);const c
  if(cur&&!mine.includes(cur)&&!others.includes(cur))others.push(cur);
  $("subject").innerHTML='<option value="">Choose the lesson subject…</option>'+(mine.length?`<optgroup label="Subjects this teacher teaches">${mine.map(x=>`<option>${esc(x)}</option>`).join("")}</optgroup>`:"")+`<optgroup label="${mine.length?"Other subjects":"Subjects"}">${others.map(x=>`<option>${esc(x)}</option>`).join("")}</optgroup>`;
  if(cur)$("subject").value=cur;}
-function showForm(){$("form").classList.remove("hide");$("bar").classList.remove("hide");$("startHint").classList.add("hide");renderCriteria();renderOverall();renderPhotos();}
+function renderAlso(){$("alsoBox").innerHTML=alsoSeenHtml(obs.also_seen||[],"");}
+$("alsoBox").addEventListener("click",e=>{const b=e.target.closest(".alsob");if(!b||!obs)return;const c=b.dataset.also;const a=new Set(obs.also_seen||[]);
+ a.has(c)?a.delete(c):a.add(c);obs.also_seen=[...a];b.setAttribute("aria-pressed",a.has(c));save(()=>sb.from("observations").update({also_seen:obs.also_seen}).eq("id",obs.id));});
+function showForm(){$("form").classList.remove("hide");$("bar").classList.remove("hide");$("startHint").classList.add("hide");renderCriteria();renderOverall();renderPhotos();renderAlso();}
 $("teacher").onchange=async()=>{const tid=$("teacher").value;if(!tid||obs)return;fillLists();
  const t=teachers.find(x=>x.id===tid);if(t.homeroom)$("grade").value=t.homeroom;else if(t.classes.length===1)$("grade").value=t.classes[0];if(t.subjects.length===1)$("subject").value=t.subjects[0];
  const {data,error}=await sb.from("observations").insert({school_id:ctx.school.id,teacher_id:tid,observer_id:ctx.user.id,type:"formal_observation",observed_on:$("date").value,academic_year:academicYear($("date").value),grade_class:$("grade").value,subject:$("subject").value,focus:$("focus").value}).select().single();
