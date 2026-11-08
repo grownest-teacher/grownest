@@ -37,10 +37,10 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
    <label class="f">Teacher<select id="teacher"><option value="">Choose a teacher…</option></select></label>
    <label class="f">Date<input id="date" type="date"></label>
    <label class="f">Class / grade<input id="grade" list="classList"></label>
-   <label class="f">Subject<input id="subject" list="subjList"></label>
+   <label class="f">Subject observed<select id="subject"><option value="">Choose the lesson subject…</option></select></label>
   </div>
   <label class="f">Lesson focus<input id="focus" placeholder="Learning objective or unit"></label>
-  <datalist id="classList"></datalist><datalist id="subjList"></datalist>
+  <datalist id="classList"></datalist>
   <p class="muted" id="startHint" style="margin:0">Choose the teacher to start. Everything saves automatically.</p>
  </section>
  <div id="form" class="hide">
@@ -103,18 +103,21 @@ async function loadObs(id){
  fillLists();showForm();
  if(obs.status==="sent")showMsg($("msg"),"This observation has been sent to the teacher. Any changes you make are saved to the record.","info");
 }
-function fillLists(){const t=teachers.find(x=>x.id===$("teacher").value);
+function fillLists(){const t=teachers.find(x=>x.id===$("teacher").value);const cur=obs?obs.subject:$("subject").value;
  $("classList").innerHTML=(t?t.classes:[]).map(c=>`<option value="${esc(c)}">`).join("");
- $("subjList").innerHTML=(t?t.subjects:[]).map(c=>`<option value="${esc(c)}">`).join("");}
+ const mine=t?t.subjects:[], others=SUBJECTS.filter(x=>!mine.includes(x));
+ if(cur&&!mine.includes(cur)&&!others.includes(cur))others.push(cur);
+ $("subject").innerHTML='<option value="">Choose the lesson subject…</option>'+(mine.length?`<optgroup label="Subjects this teacher teaches">${mine.map(x=>`<option>${esc(x)}</option>`).join("")}</optgroup>`:"")+`<optgroup label="${mine.length?"Other subjects":"Subjects"}">${others.map(x=>`<option>${esc(x)}</option>`).join("")}</optgroup>`;
+ if(cur)$("subject").value=cur;}
 function showForm(){$("form").classList.remove("hide");$("bar").classList.remove("hide");$("startHint").classList.add("hide");renderCriteria();renderOverall();renderPhotos();}
 $("teacher").onchange=async()=>{const tid=$("teacher").value;if(!tid||obs)return;fillLists();
- const t=teachers.find(x=>x.id===tid);if(t.classes.length===1)$("grade").value=t.classes[0];if(t.subjects.length===1)$("subject").value=t.subjects[0];
+ const t=teachers.find(x=>x.id===tid);if(t.homeroom)$("grade").value=t.homeroom;else if(t.classes.length===1)$("grade").value=t.classes[0];if(t.subjects.length===1)$("subject").value=t.subjects[0];
  const {data,error}=await sb.from("observations").insert({school_id:ctx.school.id,teacher_id:tid,observer_id:ctx.user.id,type:"formal_observation",observed_on:$("date").value,academic_year:academicYear($("date").value),grade_class:$("grade").value,subject:$("subject").value,focus:$("focus").value}).select().single();
  if(error)return showMsg($("msg"),friendly(error),"err");
  obs=data;history.replaceState(null,"","observe.html?id="+obs.id);$("teacher").disabled=true;showForm();};
 let ft=null;
 function fieldsChanged(){if(!obs)return;clearTimeout(ft);$("saveSt").textContent="Saving…";ft=setTimeout(()=>save(()=>sb.from("observations").update({observed_on:$("date").value,academic_year:academicYear($("date").value),grade_class:$("grade").value,subject:$("subject").value,focus:$("focus").value,extra_strengths:$("extraS").value,extra_development:$("extraD").value}).eq("id",obs.id)),700);}
-["date","grade","subject","focus","extraS","extraD"].forEach(k=>$(k).addEventListener("input",fieldsChanged));
+["date","grade","focus","extraS","extraD"].forEach(k=>$(k).addEventListener("input",fieldsChanged));$("subject").addEventListener("change",fieldsChanged);
 function renderCriteria(){
  $("criteria").innerHTML=inds.map(ind=>{const n=judg[ind.code]||0;const L=lvl(n);
   const list=(kind,title)=>{const ss=stmts.filter(s=>s.indicator_code===ind.code&&s.level===n&&s.kind===kind);

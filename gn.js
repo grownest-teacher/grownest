@@ -44,3 +44,5 @@ function headerButtons(links){ // replaces the header button with Dashboard/othe
   links.forEach(([href, text]) => { const a = document.createElement("a"); a.className = "btn ghost small"; a.href = href; a.textContent = text; box.append(a); });
   const so = document.createElement("a"); so.className = "btn ghost small"; so.href = "#"; so.textContent = "Sign out"; so.onclick = e => { e.preventDefault(); signOut(); }; box.append(so);
 }
+
+const SUBJECTS = ["Unit of Inquiry","English","Maths","Science","Arabic","Islamic Education","Social Studies","Moral Education","Art","Music","PE","Computing","French","Read Write Inc.","Library"];
