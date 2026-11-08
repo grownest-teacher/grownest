@@ -24,6 +24,7 @@
   </section>
   <section id="platformBox" class="card hide">
    <h2>GrowNest owner</h2><h3>Schools waiting for approval</h3><div id="pendingSchools"></div>
+   <h3 style="margin-top:24px">Demo requests</h3><div id="demoReqs"></div>
   </section>
  </section>
 </main>
@@ -53,7 +54,7 @@ async function load(){
  $("hello").textContent="Welcome, "+(staff.full_name||"").split(" ")[0];
  $("schoolLine").textContent=(school?.name||"")+(staff.job_title?" · "+staff.job_title:"");
  if(staff.role==="school_admin"&&staff.active){$("adminBox").classList.remove("hide");$("joinCode").textContent=school.join_code;loadPendingStaff(staff.school_id);}
- if(isOwner){$("platformBox").classList.remove("hide");loadPendingSchools();}
+ if(isOwner){$("platformBox").classList.remove("hide");loadPendingSchools();loadDemos();}
  if(staff.active&&school&&school.status==="active")loadMeetings(staff.school_id);
 }
 async function loadMeetings(sid){
@@ -69,6 +70,13 @@ async function loadPendingStaff(sid){
  if(error)return fail(error);
  $("pendingStaff").innerHTML=data.length?"<table class='t'>"+data.map(s=>"<tr><td><b>"+esc(s.full_name)+"</b><br><span class='muted'>"+esc(s.job_title||"")+" · "+esc(s.email||"")+"</span></td><td style='text-align:right'><button class='btn sage small' data-staff='"+s.id+"'>Approve</button></td></tr>").join("")+"</table>":"<p class='muted'>No one is waiting.</p>";
 }
+async function loadDemos(){
+ const {data,error}=await sb.from("demo_requests").select("*").order("created_at",{ascending:false}).limit(50);
+ if(error){$("demoReqs").innerHTML="<p class='muted'>Demo requests will appear here once Step 8 is set up.</p>";return;}
+ const ST={new:"New",contacted:"Contacted",demo_booked:"Demo booked",closed:"Closed"};
+ $("demoReqs").innerHTML=data.length?"<table class='t'>"+data.map(r=>"<tr><td><b>"+esc(r.school_name)+"</b> · "+esc(r.full_name)+(r.role?" ("+esc(r.role)+")":"")+"<br><span class='muted'>"+esc(r.email)+(r.phone?" · "+esc(r.phone):"")+" · prefers "+esc(r.contact_pref||"email")+(r.preferred_time?" · "+esc(r.preferred_time):"")+" · "+new Date(r.created_at).toLocaleDateString("en-GB")+"</span>"+(r.message?"<br><span style='font-size:.9rem'>“"+esc(r.message)+"”</span>":"")+"</td><td style='text-align:right'><select data-demo='"+r.id+"' style='font:inherit;padding:6px;border-radius:8px;border:1px solid var(--line)'>"+Object.entries(ST).map(([k,v])=>"<option value='"+k+"' "+(r.status===k?"selected":"")+">"+v+"</option>").join("")+"</select></td></tr>").join("")+"</table>":"<p class='muted'>No demo requests yet.</p>";
+}
+document.addEventListener("change",async e=>{const id=e.target.dataset.demo;if(!id)return;const {error}=await sb.from("demo_requests").update({status:e.target.value}).eq("id",id);if(error)fail(error);});
 async function loadPendingSchools(){
  const {data,error}=await sb.from("schools").select("id,name,emirate,created_at,status").eq("status","pending").order("created_at");
  if(error)return fail(error);

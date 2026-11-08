@@ -7,6 +7,18 @@
 .nav4 nav a{text-decoration:none;color:var(--ink);font-weight:500;padding:6px 0;border-bottom:3px solid transparent}
 .nav4 nav a.on{color:var(--plum);font-weight:600;border-bottom-color:#7E57C2}
 .nav4 .signin{border-radius:99px;padding:10px 20px}
+.nav4 .demob{border-radius:99px;padding:10px 18px}
+.lp section{scroll-margin-top:90px}
+.demo{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:0;border-radius:28px;overflow:hidden;box-shadow:0 18px 40px rgba(74,44,94,.14);background:#fff}
+.dleft{background:radial-gradient(800px 400px at 0% 0%,#5E3B75,#4A2C5E 60%,#3B2249);color:#E3D6F2;padding:40px}
+.dleft p{color:#E3D6F2}.dleft .small{font-size:.9rem;color:#CBB8E6;margin-top:18px}
+.dlist{list-style:none;padding:0;margin:20px 0 0}.dlist li{padding:10px 0 10px 32px;position:relative;border-bottom:1px solid rgba(255,255,255,.12)}
+.dlist li::before{content:"✓";position:absolute;left:0;top:9px;width:22px;height:22px;border-radius:50%;background:#8BC34A;color:#2E1A40;font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.dlist b{color:#fff}
+.dform{padding:32px 36px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 14px}.dform label.f input,.dform label.f select{width:100%;min-width:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;margin:6px 0 14px;color:var(--muted)}.consent input{width:18px;height:18px;margin-top:2px;accent-color:var(--plum)}
 .hero4{position:relative;background:linear-gradient(180deg,#F8F4FC 0%,#F3ECFA 100%);overflow:hidden;padding-bottom:70px}
 .hero4 .wrap,.nav4 .wrap{max-width:1260px}
 .h4grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center;padding-top:36px;position:relative;z-index:2}
@@ -38,8 +50,8 @@
 .pill .g{white-space:nowrap;background:#C5E89A;color:#2E4A12;font-weight:700;border-radius:99px;padding:7px 16px}
 .wave{position:absolute;left:0;right:0;bottom:0;width:100%;height:110px;z-index:1}
 @media (max-width:1000px){.nav4 nav{display:none}.nav4 .signin{margin-left:auto}.strip{left:0}.badge{width:140px;height:140px;font-size:.9rem;bottom:110px}}
-@media (max-width:860px){.h4grid{grid-template-columns:1fr}.h4text h1{font-size:2.6rem}.h4vis{margin-top:10px}.plane{display:none}}
-@media (max-width:520px){.h4text h1{font-size:2.2rem}.spark{width:34px;height:30px}.strip{position:relative;left:0;bottom:0;margin-top:-30px;padding:10px 6px}.strip div{padding:0 8px;font-size:.8rem;gap:6px}.strip svg{width:26px;height:26px}.badge{width:116px;height:116px;font-size:.78rem;right:-4px;top:-20px;bottom:auto;padding:10px}.badge .tick{width:30px;height:30px}.pill{position:relative;margin-top:14px;right:auto;bottom:auto;font-size:.82rem}.h4vis{padding-bottom:10px}.nav4 .brand img{height:42px}.hero4{padding-bottom:60px}}
+@media (max-width:860px){.demo{grid-template-columns:1fr}.dleft{padding:28px}.dform{padding:24px}.h4grid{grid-template-columns:1fr}.h4text h1{font-size:2.6rem}.h4vis{margin-top:10px}.plane{display:none}}
+@media (max-width:520px){.g2{grid-template-columns:1fr}.nav4 .demob{display:none}.h4text h1{font-size:2.2rem}.spark{width:34px;height:30px}.strip{position:relative;left:0;bottom:0;margin-top:-30px;padding:10px 6px}.strip div{padding:0 8px;font-size:.8rem;gap:6px}.strip svg{width:26px;height:26px}.badge{width:116px;height:116px;font-size:.78rem;right:-4px;top:-20px;bottom:auto;padding:10px}.badge .tick{width:30px;height:30px}.pill{position:relative;margin-top:14px;right:auto;bottom:auto;font-size:.82rem}.h4vis{padding-bottom:10px}.nav4 .brand img{height:42px}.hero4{padding-bottom:60px}}
 
 .herob{background:radial-gradient(1200px 500px at 85% 10%,#5E3B75 0%,#4A2C5E 55%,#3B2249 100%);color:#fff;overflow:hidden}
 .hero3{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding-top:44px;padding-bottom:56px}
@@ -111,6 +123,7 @@
 <header class="nav4"><div class="wrap">
  <a href="index.html" class="brand"><img src="logo-header.png" alt="GrowNest"></a>
  <nav><a href="index.html" class="on">Home</a><a href="#how">How it works</a><a href="#features">Features</a><a href="#founders">Founders</a></nav>
+ <a class="btn outline demob" href="#demo">Book a demo</a>
  <a class="btn primary signin" href="login.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Sign in</a>
 </div></header>
 <main class="lp">
@@ -121,8 +134,8 @@
    <p class="lead1">The lesson observation platform for UAE schools.</p>
    <p class="lead2">Learning walks, formal observations and appraisals in one place, aligned to the MOE inspection framework, with feedback sent to teachers in one tap.</p>
    <div class="actions">
-    <a class="btn primary big" href="register.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2"/><path d="M9 12a22 22 0 0 1 11-9 22 22 0 0 1-9 11z"/><path d="M9 12H5l2-4h5M12 15v4l4-2v-5"/></svg>Register your school</a>
-    <a class="btn outline big" href="#how"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M7 4l13 8-13 8z"/></svg>See how it works</a>
+    <a class="btn primary big" href="#demo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M9 15l2 2 4-4"/></svg>Book a demo</a>
+    <a class="btn outline big" href="register.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1.5 1.3-2 5-2 5s3.7-.5 5-2"/><path d="M9 12a22 22 0 0 1 11-9 22 22 0 0 1-9 11z"/><path d="M9 12H5l2-4h5M12 15v4l4-2v-5"/></svg>Register your school</a>
    </div>
    <p class="fam">Part of the <b>ThinkNest</b> family</p>
    <svg class="plane" viewBox="0 0 420 150" aria-hidden="true"><path d="M10 140 C70 90 150 120 200 110 C250 100 230 60 205 70 C180 82 215 120 280 92" fill="none" stroke="#7E57C2" stroke-width="2.5" stroke-dasharray="7 8" stroke-linecap="round"/><path d="M300 70 L410 20 L360 110 L340 82 Z M340 82 L410 20" fill="#fff" stroke="#7E57C2" stroke-width="3" stroke-linejoin="round"/></svg>
@@ -210,15 +223,64 @@
  <div class="founders"><div class="fc"><div class="av"><img src="founder-fatma.jpg" alt="Fatma Elzahraa Nabil"></div><h3>Fatma Elzahraa Nabil</h3><div class="role">Co-founder · Assistant Principal (Primary) & PYP Coordinator</div><p>An experienced educator and school leader passionate about inquiry-based learning, student well-being and inclusive education.</p><details><summary>Read full bio</summary><div class="full"><p>An experienced educator and school leader passionate about inquiry-based learning, student well-being, and inclusive education.</p><p>With over a decade of teaching experience and a strong foundation in educational leadership, I am committed to creating engaging, learner-centred environments where every child feels valued, supported, and inspired to reach their potential.</p><p>My leadership approach centres on collaboration, empowering educators, fostering curiosity, and developing compassionate, confident learners who are ready to make a positive difference in the world.</p></div></details></div><div class="fc"><div class="av"><img src="founder-mona.jpg" alt="Mona Abushousha"></div><h3>Mona Abushousha</h3><div class="role">Co-founder · School Principal</div><p>Over 16 years in education, from classroom teaching to Principal across two countries, with a PGCE from the University of Nottingham and the NPQH.</p><details><summary>Read full bio</summary><div class="full"><p>My passion for education led me from an Honours degree in Pharmaceutical Sciences into the classroom, where I discovered my true calling. Over the past 16 years, I have progressed from classroom teaching to leadership roles across two countries, ultimately achieving my goal of becoming a school Principal.</p><p>My commitment to professional growth is reflected in my PGCE from the University of Nottingham, Middle Leadership training with the British Council, and National Professional Qualification for Headship (NPQH) from the UK Department for Education.</p><p>Throughout my career, I have remained passionate about student-centred leadership, empowering teachers, building strong relationships with parents, and creating environments where every learner can thrive.</p><p>As Co-Founder of ThinkNest, I am excited to extend my impact beyond the school walls, supporting students, parents, and educators through a platform dedicated to meaningful learning, growth, and educational excellence.</p></div></details></div><div class="fc"><div class="av"><img src="founder-salma.jpg" alt="Salma Farid"></div><h3>Salma Farid</h3><div class="role">Co-founder · Marketing & Communications</div><p>A marketing and communications professional with over 10 years of experience across the UAE and Egypt, bringing together storytelling, brand development and community engagement.</p><details><summary>Read full bio</summary><div class="full"><p>Marketing & Communications | Brand Storytelling | Parent Relations & Community Engagement</p><p>I believe that great communication is more than just sharing a message, it is about creating connections, inspiring trust, and making people feel that they truly belong.</p><p>I am a passionate Marketing and Communications professional with over 10 years of diverse experience across the UAE and Egypt, bringing together creativity, strategic thinking, and a genuine love for people.</p><p>My professional journey has been driven by one simple belief: every interaction is an opportunity to make a difference, and every story deserves to be told in a way that leaves an impact.</p><p>With experience working across educational organisations and diverse professional environments, I combine my passion for storytelling, digital marketing, brand development, and community engagement to create meaningful experiences that go far beyond traditional communications. From developing compelling digital content and strengthening brand identity to leading large-scale events and building lasting relationships, I thrive on turning ideas into experiences that connect, inspire, and bring communities together.</p></div></details></div></div>
 </div></section>
 
+<section id="demo" style="padding-top:0"><div class="wrap"><div class="demo">
+ <div class="dleft">
+  <span class="eyebrow" style="color:#A3C49A">Book a demo</span>
+  <h2 style="color:#fff">See GrowNest in action</h2>
+  <p>A friendly 30-minute online walkthrough with one of our founders, at a time that suits you.</p>
+  <ul class="dlist">
+   <li><b>A live observation</b> on the six-point MOE scale, with ready-made feedback</li>
+   <li><b>Learning walks</b> and how patterns build up across classes</li>
+   <li><b>Teacher records and appraisals</b> built from real evidence</li>
+   <li><b>SEF evidence</b> generated from your observations</li>
+   <li><b>Your questions</b> about setup, privacy and getting started</li>
+  </ul>
+  <p class="small">No commitment. We’ll reply within two working days.</p>
+ </div>
+ <form class="dform" id="demoForm" novalidate>
+  <div class="g2">
+   <label class="f">Your name *<input id="dName" autocomplete="name"></label>
+   <label class="f">Your role<select id="dRole"><option value="">Choose…</option><option>Principal</option><option>Vice Principal</option><option>Assistant Principal</option><option>Head of Section / Phase</option><option>Coordinator</option><option>Head of Department</option><option>Owner / Governor</option><option>Other</option></select></label>
+   <label class="f">School name *<input id="dSchool" autocomplete="organization"></label>
+   <label class="f">Emirate<select id="dEmirate"><option value="">Choose…</option><option>Abu Dhabi</option><option>Dubai</option><option>Sharjah</option><option>Ajman</option><option>Umm Al Quwain</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Outside the UAE</option></select></label>
+   <label class="f">Work email *<input id="dEmail" type="email" inputmode="email" autocomplete="email"></label>
+   <label class="f">Phone / WhatsApp<input id="dPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+971"></label>
+   <label class="f">Number of teachers<select id="dSize"><option value="">Choose…</option><option>Up to 25</option><option>26–50</option><option>51–100</option><option>101–200</option><option>More than 200</option></select></label>
+   <label class="f">Best way to contact you<select id="dPref"><option>Email</option><option>WhatsApp</option><option>Phone call</option></select></label>
+  </div>
+  <label class="f">Best days or times for the demo<input id="dTime" placeholder="e.g. Tuesday or Wednesday after 2 pm"></label>
+  <p style="font-weight:600;font-size:.9rem;margin:4px 0 6px">Most interested in</p>
+  <div class="also" id="dInt"><button type="button" class="alsob" aria-pressed="false">Formal observations</button><button type="button" class="alsob" aria-pressed="false">Learning walks</button><button type="button" class="alsob" aria-pressed="false">Appraisals</button><button type="button" class="alsob" aria-pressed="false">SEF evidence</button><button type="button" class="alsob" aria-pressed="false">Teacher feedback by email</button></div>
+  <label class="f" style="margin-top:14px">Anything you’d like us to know?<textarea id="dMsg" rows="3" style="font:inherit;font-weight:400;padding:12px 14px;border:1px solid var(--line);border-radius:10px"></textarea></label>
+  <input id="dWeb" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <label class="consent"><input type="checkbox" id="dOk"> I agree that GrowNest can contact me about this demo request.</label>
+  <div id="dMsgBox" class="msg hide" role="status"></div>
+  <button class="btn primary big" id="dSend" style="width:100%">Request my demo</button>
+ </form>
+</div></div></section>
+
 <section style="padding-top:0"><div class="wrap"><div class="cta">
  <h2>Ready to see teaching more clearly?</h2><p class="lead" style="margin:0 auto 22px">Register your school in a few minutes. Your observers can join with your school code.</p>
- <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn primary" href="register.html">Register your school</a><a class="btn ghost" href="login.html">Sign in</a></div>
+ <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn primary" href="#demo">Book a demo</a><a class="btn ghost" href="register.html">Register your school</a></div>
 </div></div></section>
 </main>
 <footer class="lpfoot"><div class="wrap">
  <div class="tn"><img src="favicon.png" alt="" style="width:34px;height:34px;border-radius:50%"><span>GrowNest is part of <a href="https://thinknestonline.com" target="_blank" rel="noopener">ThinkNest</a></span></div>
  <div class="muted" style="font-size:.9rem">© 2026 GrowNest · See teaching. Grow teachers.</div>
 </div></footer>
-
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108l"></script>
+<script>
+document.querySelectorAll("#dInt .alsob").forEach(b=>b.onclick=()=>b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true"));
+$("demoForm").addEventListener("submit",async e=>{e.preventDefault();const m=$("dMsgBox");
+ const d={full_name:$("dName").value.trim(),role:$("dRole").value,school_name:$("dSchool").value.trim(),emirate:$("dEmirate").value,email:$("dEmail").value.trim(),phone:$("dPhone").value.trim(),
+  school_size:$("dSize").value,contact_pref:$("dPref").value,preferred_time:$("dTime").value.trim(),interests:[...document.querySelectorAll('#dInt .alsob[aria-pressed="true"]')].map(b=>b.textContent),message:$("dMsg").value.trim(),website:$("dWeb").value};
+ if(!d.full_name||!d.school_name||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email))return showMsg(m,"Please fill in your name, school and a valid work email.","err");
+ if(!$("dOk").checked)return showMsg(m,"Please tick the box so we can contact you about the demo.","err");
+ $("dSend").disabled=true;$("dSend").textContent="Sending…";
+ try{const {data,error}=await sb.functions.invoke("grownest-mail",{body:{action:"demo",demo:d}});
+  if(error){let msg=error.message;try{const j=await error.context.json();if(j&&j.error)msg=j.error;}catch(_){}throw new Error(msg);}
+  if(data&&data.error)throw new Error(data.error);
+  $("demoForm").innerHTML='<div style="text-align:center;padding:40px 10px"><div style="width:64px;height:64px;border-radius:50%;background:#8BC34A;color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">✓</div><h2>Thank you, '+esc(d.full_name.split(" ")[0])+'!</h2><p class="muted">We’ve received your demo request for '+esc(d.school_name)+'. One of our founders will contact you within two working days. A confirmation has been sent to '+esc(d.email)+'.</p></div>';
+ }catch(err){$("dSend").disabled=false;$("dSend").textContent="Request my demo";showMsg(m,(err.message||"Something went wrong")+" If this keeps happening, email us at grownest.teacher@gmail.com.","err");}});
+</script>
 </body></html>
