@@ -15,3 +15,13 @@ function friendly(err){
   if (/Email not confirmed/i.test(m)) return "Please confirm your email first using the link we sent you.";
   return m;
 }
+
+// Make sure the person is signed in, approved and their school is active. Returns {user, staff, school}.
+async function requireStaff(){
+  const {data:{session}} = await sb.auth.getSession();
+  if(!session){ location.href = "login.html"; return null; }
+  const {data:staff} = await sb.from("staff").select("*, schools(*)").eq("id", session.user.id).maybeSingle();
+  if(!staff || !staff.active || !staff.schools || staff.schools.status !== "active"){ location.href = "app.html"; return null; }
+  return {user: session.user, staff, school: staff.schools};
+}
+async function signOut(){ await sb.auth.signOut(); location.href = "index.html"; }
