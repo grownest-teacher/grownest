@@ -52,3 +52,10 @@ label.f textarea,label.f .note{font-weight:400}
 .alsob{font:inherit;font-size:.85rem;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:7px 12px;cursor:pointer}
 .alsob[aria-pressed="true"]{background:#E5F0E3;border-color:var(--sage);color:#2D5A29;font-weight:600}
 .alsob[aria-pressed="true"]::before{content:"✓ "}
+/* ---- Arabic / right-to-left ---- */
+html[lang="ar"] body{font-family:"IBM Plex Sans Arabic",Poppins,Tahoma,Arial,sans-serif}
+html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] h3{letter-spacing:0;line-height:1.35}
+html[lang="ar"] .t-en{display:none!important}
+html:not([lang="ar"]) .t-ar{display:none!important}
+.langsw{font:inherit;font-weight:600;border:0;background:transparent;color:var(--plum);cursor:pointer;padding:8px 10px;border-radius:10px;white-space:nowrap}
+.langsw:hover{background:var(--mist)}

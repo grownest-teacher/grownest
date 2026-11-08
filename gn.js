@@ -6,13 +6,14 @@ const SITE = location.origin + location.pathname.replace(/[^/]*$/, "");
 const $ = id => document.getElementById(id);
 function esc(s){return String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function showMsg(el, text, type="info"){el.className="msg "+type; el.textContent=text; el.classList.remove("hide");}
+if (typeof window.t !== "function") window.t = (en, ar) => en;
 function friendly(err){
   const m = (err && err.message) || String(err);
-  if (/Invalid login/i.test(m)) return "The email or password is not correct.";
-  if (/already registered|already been registered/i.test(m)) return "An account with this email already exists. Please sign in instead.";
-  if (/Password should be/i.test(m)) return "Please choose a password with at least 8 characters.";
-  if (/rate limit/i.test(m)) return "Too many emails were sent in a short time. Please wait a few minutes and try again.";
-  if (/Email not confirmed/i.test(m)) return "Please confirm your email first using the link we sent you.";
+  if (/Invalid login/i.test(m)) return t("The email or password is not correct.", "البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+  if (/already registered|already been registered/i.test(m)) return t("An account with this email already exists. Please sign in instead.", "يوجد حساب بهذا البريد الإلكتروني بالفعل. يُرجى تسجيل الدخول بدلًا من ذلك.");
+  if (/Password should be/i.test(m)) return t("Please choose a password with at least 8 characters.", "يُرجى اختيار كلمة مرور لا تقل عن 8 أحرف.");
+  if (/rate limit/i.test(m)) return t("Too many emails were sent in a short time. Please wait a few minutes and try again.", "تم إرسال عدد كبير من الرسائل في وقت قصير. يُرجى الانتظار بضع دقائق ثم المحاولة مرة أخرى.");
+  if (/Email not confirmed/i.test(m)) return t("Please confirm your email first using the link we sent you.", "يُرجى تأكيد بريدك الإلكتروني أولًا من خلال الرابط الذي أرسلناه إليك.");
   return m;
 }
 
