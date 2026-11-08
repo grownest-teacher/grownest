@@ -1,18 +1,119 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108j"><title>GrowNest · See teaching. Grow teachers.</title><meta name="description" content="GrowNest helps schools run learning walks, formal observations and appraisals aligned to the UAE MOE framework."></head><body>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108j"><title>GrowNest · See teaching. Grow teachers.</title><meta name="description" content="GrowNest helps UAE schools run learning walks, formal observations and appraisals aligned to the MOE inspection framework. Part of ThinkNest."><style>
+.lp section{padding:64px 0}
+.lp h2{font-size:2rem;margin-bottom:10px}
+.lp .lead{font-size:1.1rem;color:var(--muted);max-width:640px}
+.eyebrow{display:inline-block;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+.hero2{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:56px 0 40px}
+.hero2 h1{font-size:3rem;line-height:1.08;margin-bottom:16px}
+.hero2 p{font-size:1.15rem;color:var(--muted)}
+.hero2 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.mock{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 40px rgba(74,44,94,.12);padding:20px;position:relative}
+.mock .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.mock .lv6{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0 14px}
+.mock .lv6 span{height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;opacity:.55}
+.mock .lv6 span.on{opacity:1;outline:2px solid var(--ink);box-shadow:0 3px 0 var(--ink)}
+.mock .tick{display:flex;gap:8px;align-items:flex-start;font-size:.88rem;padding:8px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:var(--bg)}
+.mock .tick i{width:16px;height:16px;border-radius:4px;background:var(--plum);flex:none;margin-top:2px}
+.mock .bird{position:absolute;left:-26px;top:-30px;width:78px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+.step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px}
+.step b.n{display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--mist);color:var(--plum);align-items:center;justify-content:center;margin-bottom:10px}
+.feat{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}
+.feat div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px}
+.feat h3{font-size:1rem;margin-bottom:6px}.feat p{font-size:.92rem;color:var(--muted);margin:0}
+.band{background:var(--plum);color:#fff;border-radius:28px;padding:44px}
+.band h2,.band .eyebrow{color:#fff}.band .eyebrow{color:var(--sage-l)}
+.band p{color:#E3D6F2}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chips span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:6px 12px;border-radius:99px;font-size:.85rem}
+.who{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+.who div{border-left:4px solid var(--lilac);padding:6px 0 6px 14px}
+.who b{display:block;color:var(--plum)}.who span{font-size:.9rem;color:var(--muted)}
+.founders{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px}
+.fc{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;text-align:center;align-self:start}
+.fc .av{width:110px;height:110px;border-radius:50%;margin:0 auto 14px;background:var(--mist);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--plum);overflow:hidden;border:4px solid #fff;box-shadow:0 0 0 2px var(--lilac)}
+.fc .av img{width:100%;height:100%;object-fit:cover}
+.fc h3{margin-bottom:2px}.fc .role{color:var(--sage);font-weight:600;font-size:.9rem;margin-bottom:10px}
+.fc p{color:var(--muted);font-size:.93rem;margin:0}
+.fc details{margin-top:14px;text-align:left}.fc summary{cursor:pointer;color:var(--plum);font-weight:600;text-align:center;list-style:none}.fc summary::-webkit-details-marker{display:none}
+.fc summary::after{content:" ▾"}.fc details[open] summary::after{content:" ▴"}
+.fc .full{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}.fc .full p{margin:0 0 10px;font-size:.9rem}
+.cta{text-align:center;background:var(--mist);border-radius:28px;padding:48px 24px}
+.lpfoot{border-top:1px solid var(--line);padding:30px 0 40px;margin-top:20px}
+.lpfoot .wrap{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.tn{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.95rem}
+.tn a{font-weight:600}
+@media (max-width:900px){.feat{grid-template-columns:repeat(2,1fr)}.who{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.hero2{grid-template-columns:1fr;padding-top:28px}.hero2 h1{font-size:2.2rem}.steps,.founders{grid-template-columns:1fr}.lp section{padding:44px 0}.band{padding:28px 22px}.mock .bird{width:58px;left:-10px;top:-24px}}
+@media (max-width:480px){.feat,.who{grid-template-columns:1fr}}
+</style></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="login.html">Sign in</a></div></header>
-<main class="wrap">
-<section class="hero">
- <div><h1>See teaching. Grow teachers.</h1>
- <p>GrowNest brings learning walks, formal observations and appraisals together in one place, aligned to the UAE MOE inspection framework. Observe on your iPad or phone, keep the evidence, and send teachers their feedback by email in one tap.</p>
- <div class="actions"><a class="btn primary" href="register.html">Register your school</a><a class="btn ghost" href="login.html">Sign in</a></div></div>
- <div class="hero-art"><img src="logo.png" alt=""></div>
-</section>
-<section class="features">
- <div class="feature"><h3>Learning walks</h3><p class="muted">Quick visits focused on chosen MOE indicators, marked as seen, partly seen or not seen, with photo evidence.</p></div>
- <div class="feature"><h3>Formal observations</h3><p class="muted">Judge each indicator on the six-point MOE scale, tick ready-made feedback statements and email the form to the teacher.</p></div>
- <div class="feature"><h3>Appraisals</h3><p class="muted">Every walk and observation builds the teacher’s record over time, ready for appraisal and inspection evidence.</p></div>
-</section></main>
-<footer>© GrowNest · See teaching. Grow teachers.</footer>
+<main class="lp">
+<div class="wrap">
+ <div class="hero2">
+  <div><span class="eyebrow">Lesson observation for UAE schools</span>
+   <h1>See teaching.<br>Grow teachers.</h1>
+   <p>GrowNest brings learning walks, formal observations and appraisals together in one place, aligned to the UAE MOE inspection framework. Observe on your iPad or phone, keep the evidence, and send teachers their feedback in one tap.</p>
+   <div class="actions"><a class="btn primary" href="register.html">Register your school</a><a class="btn ghost" href="#how">See how it works</a></div></div>
+  <div class="mock" aria-hidden="true">
+   <div class="row"><b style="color:var(--plum)">Progress in the lesson</b><span class="lchip">MOE 1.2</span></div>
+   <div class="lv6"><span class="" style="background:#4F8A4B;color:#fff">6</span><span class="on" style="background:#8BBF86;color:#1E3A1C">5</span><span class="" style="background:#CFE6CA;color:#1E3A1C">4</span><span class="" style="background:#F6D892;color:#4A3500">3</span><span class="" style="background:#F3B08A;color:#4A2000">2</span><span class="" style="background:#E07C7C;color:#fff">1</span></div>
+   <div class="tick"><i></i>Most students made better than expected progress against the lesson objectives.</div>
+   <div class="tick"><i></i>Learning objectives were clear, and most students could show what they had achieved.</div>
+   <div class="row" style="margin:14px 0 0"><span class="muted" style="font-size:.85rem">Overall judgement</span><span class="lchip" style="background:#8BBF86;color:#1E3A1C">5 · Very good</span></div>
+  </div>
+ </div>
+</div>
+
+<section id="how"><div class="wrap">
+ <span class="eyebrow">How it works</span><h2>From the classroom to growth, in three steps</h2>
+ <div class="steps">
+  <div class="step"><b class="n">1</b><h3>Observe</h3><p class="muted">Tap a level for each MOE indicator, tick ready-made feedback statements and take photos as evidence, all on your iPad or phone.</p></div>
+  <div class="step"><b class="n">2</b><h3>Send feedback</h3><p class="muted">One tap emails the teacher their feedback and the completed form. Teachers don’t need an account; they simply choose whether they’d like a meeting.</p></div>
+  <div class="step"><b class="n">3</b><h3>See growth</h3><p class="muted">Every walk, observation and appraisal builds each teacher’s record, with growth charts and recurring strengths and next steps.</p></div>
+ </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+ <span class="eyebrow">What’s inside</span><h2>Everything school leaders need for quality assurance</h2>
+ <div class="feat">
+  <div><h3>Learning walks</h3><p>Short visits focused on chosen MOE indicators, marked seen, partly seen or not yet seen, with lesson stage and time.</p></div>
+  <div><h3>Formal observations</h3><p>All 12 lesson-observable MOE indicators on the six-point scale, with a bank of feedback statements for every level.</p></div>
+  <div><h3>Appraisals</h3><p>Termly or annual appraisals with ratings suggested from the year’s observation evidence and agreed targets.</p></div>
+  <div><h3>Teacher records</h3><p>One page per teacher with a timeline, growth chart, indicator profile and a downloadable summary.</p></div>
+  <div><h3>Photo evidence</h3><p>Take photos during the lesson, link each one to an indicator and keep it privately with the record.</p></div>
+  <div><h3>Word forms</h3><p>Professional observation and appraisal forms, ready to sign, file or attach.</p></div>
+  <div><h3>Meeting requests</h3><p>See at a glance which teachers asked to meet about their feedback, and mark meetings as done.</p></div>
+  <div><h3>Private by school</h3><p>Each school has its own secure space. Teachers and data are never shared between schools.</p></div>
+ </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap"><div class="band">
+ <span class="eyebrow">Built around the UAE framework</span><h2>Aligned to the MOE inspection framework</h2>
+ <p class="lead" style="color:#E3D6F2">Every judgement uses the six-point MOE scale, and every indicator carries its framework reference, so your evidence is ready for self-evaluation and inspection.</p>
+ <div class="chips"><span>1.2 Progress</span><span>1.3 Learning skills</span><span>2.1 Attitudes and behaviour</span><span>3.1 Teaching for effective learning</span><span>3.2 Assessment</span><span>Outstanding → Very weak</span></div>
+</div></div></section>
+
+<section style="padding-top:0"><div class="wrap">
+ <span class="eyebrow">Who it’s for</span><h2>Made for the people who lead learning</h2>
+ <div class="who"><div><b>Principals</b><span>A clear picture of teaching quality across the school.</span></div><div><b>Vice principals</b><span>Appraisals built on real evidence, not memory.</span></div><div><b>Coordinators</b><span>Learning walks and patterns across phases and subjects.</span></div><div><b>Heads of department</b><span>Focused feedback and follow-up for their team.</span></div></div>
+</div></section>
+
+<section id="founders" style="padding-top:0"><div class="wrap">
+ <span class="eyebrow">Meet the founders</span><h2>Built by people who know schools</h2>
+ <p class="lead">GrowNest was created by the founders of ThinkNest, bringing together school leadership and communications experience across the UAE and beyond.</p>
+ <div class="founders"><div class="fc"><div class="av"><img src="founder-fatma.jpg" alt="Fatma Elzahraa Nabil"></div><h3>Fatma Elzahraa Nabil</h3><div class="role">Co-founder · Assistant Principal (Primary) & PYP Coordinator</div><p>An experienced educator and school leader passionate about inquiry-based learning, student well-being and inclusive education.</p><details><summary>Read full bio</summary><div class="full"><p>An experienced educator and school leader passionate about inquiry-based learning, student well-being, and inclusive education.</p><p>With over a decade of teaching experience and a strong foundation in educational leadership, I am committed to creating engaging, learner-centred environments where every child feels valued, supported, and inspired to reach their potential.</p><p>My leadership approach centres on collaboration, empowering educators, fostering curiosity, and developing compassionate, confident learners who are ready to make a positive difference in the world.</p></div></details></div><div class="fc"><div class="av"><img src="founder-mona.jpg" alt="Mona Abushousha"></div><h3>Mona Abushousha</h3><div class="role">Co-founder · School Principal</div><p>Over 16 years in education, from classroom teaching to Principal across two countries, with a PGCE from the University of Nottingham and the NPQH.</p><details><summary>Read full bio</summary><div class="full"><p>My passion for education led me from an Honours degree in Pharmaceutical Sciences into the classroom, where I discovered my true calling. Over the past 16 years, I have progressed from classroom teaching to leadership roles across two countries, ultimately achieving my goal of becoming a school Principal.</p><p>My commitment to professional growth is reflected in my PGCE from the University of Nottingham, Middle Leadership training with the British Council, and National Professional Qualification for Headship (NPQH) from the UK Department for Education.</p><p>Throughout my career, I have remained passionate about student-centred leadership, empowering teachers, building strong relationships with parents, and creating environments where every learner can thrive.</p><p>As Co-Founder of ThinkNest, I am excited to extend my impact beyond the school walls, supporting students, parents, and educators through a platform dedicated to meaningful learning, growth, and educational excellence.</p></div></details></div><div class="fc"><div class="av"><img src="founder-salma.jpg" alt="Salma Farid"></div><h3>Salma Farid</h3><div class="role">Co-founder · Marketing & Communications</div><p>A marketing and communications professional with over 10 years of experience across the UAE and Egypt, bringing together storytelling, brand development and community engagement.</p><details><summary>Read full bio</summary><div class="full"><p>Marketing & Communications | Brand Storytelling | Parent Relations & Community Engagement</p><p>I believe that great communication is more than just sharing a message, it is about creating connections, inspiring trust, and making people feel that they truly belong.</p><p>I am a passionate Marketing and Communications professional with over 10 years of diverse experience across the UAE and Egypt, bringing together creativity, strategic thinking, and a genuine love for people.</p><p>My professional journey has been driven by one simple belief: every interaction is an opportunity to make a difference, and every story deserves to be told in a way that leaves an impact.</p><p>With experience working across educational organisations and diverse professional environments, I combine my passion for storytelling, digital marketing, brand development, and community engagement to create meaningful experiences that go far beyond traditional communications. From developing compelling digital content and strengthening brand identity to leading large-scale events and building lasting relationships, I thrive on turning ideas into experiences that connect, inspire, and bring communities together.</p></div></details></div></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap"><div class="cta">
+ <h2>Ready to see teaching more clearly?</h2><p class="lead" style="margin:0 auto 22px">Register your school in a few minutes. Your observers can join with your school code.</p>
+ <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn primary" href="register.html">Register your school</a><a class="btn ghost" href="login.html">Sign in</a></div>
+</div></div></section>
+</main>
+<footer class="lpfoot"><div class="wrap">
+ <div class="tn"><img src="favicon.png" alt="" style="width:34px;height:34px;border-radius:50%"><span>GrowNest is part of <a href="https://thinknestonline.com" target="_blank" rel="noopener">ThinkNest</a></span></div>
+ <div class="muted" style="font-size:.9rem">© 2026 GrowNest · See teaching. Grow teachers.</div>
+</div></footer>
 
 
 </body></html>
