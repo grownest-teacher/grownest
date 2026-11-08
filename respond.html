@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108d"><title>Your feedback · GrowNest</title></head><body>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108e"><title>Your feedback · GrowNest</title></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a></div></header>
 <main class="wrap"><div class="card narrow" id="box">
  <h1>Thank you for the feedback</h1>
@@ -8,7 +8,7 @@
  <div id="msg" class="msg hide" role="status"></div>
  <button class="btn primary" id="confirm" style="width:100%;margin-top:8px" disabled>Confirm</button>
 </div></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108d"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108e"></script>
 <script>
 const q=new URLSearchParams(location.search);const token=q.get("t");let choice=q.get("c");
 const pick=c=>{choice=c;document.querySelectorAll(".choice").forEach(b=>b.setAttribute("aria-pressed",b.dataset.c===c));$("confirm").disabled=!c;};
