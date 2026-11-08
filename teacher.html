@@ -13,7 +13,7 @@ main.tr{padding:24px 20px 60px}
 .pat{list-style:none;padding-left:0}.pat li{margin-bottom:8px}.pat .n{display:inline-block;min-width:26px;font-weight:700;color:var(--plum)}
 .toolbar2{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .toolbar2 select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script></head><body>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108o"></script><link rel="stylesheet" href="rtl-app.css?v=20261108o"></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap tr">
  <div class="toolbar2" style="justify-content:space-between">
@@ -63,7 +63,7 @@ function chart(pts){if(!pts.length){$("chart").innerHTML='<p class="muted">No ju
  const W=640,H=230,L=40,R=16,Tp=14,B=36,n=pts.length,x=i=>n===1?(L+W-R)/2:L+(W-L-R)*i/(n-1),y=v=>Tp+(H-Tp-B)*(6-v)/5;
  let g='';for(let v=1;v<=6;v++){g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#E4DCEC"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="#6B5C7B">${v}</text>`;}
  const path=pts.map((p,i)=>`${i?"L":"M"}${x(i)},${y(p.overall_level)}`).join(" ");
- const dots=pts.map((p,i)=>{const Lv=lvl(p.overall_level);return `<circle cx="${x(i)}" cy="${y(p.overall_level)}" r="7" fill="#${Lv.bg.replace("#","")}" stroke="#4A2C5E" stroke-width="1.5"><title>${esc(fmtDate(p.observed_on))}: ${esc(Lv.name)}${p.subject?" ("+esc(p.subject)+")":""}</title></circle><text x="${x(i)}" y="${H-12}" text-anchor="middle" font-size="10" fill="#6B5C7B">${esc(new Date(p.observed_on).toLocaleDateString("en-GB",{day:"numeric",month:"short"}))}</text>`;}).join("");
+ const dots=pts.map((p,i)=>{const Lv=lvl(p.overall_level);return `<circle cx="${x(i)}" cy="${y(p.overall_level)}" r="7" fill="#${Lv.bg.replace("#","")}" stroke="#4A2C5E" stroke-width="1.5"><title>${esc(fmtDate(p.observed_on))}: ${esc(Lv.name)}${p.subject?" ("+esc(p.subject)+")":""}</title></circle><text x="${x(i)}" y="${H-12}" text-anchor="middle" font-size="10" fill="#6B5C7B">${esc(new Date(p.observed_on).toLocaleDateString(gnLocale(),{day:"numeric",month:"short"}))}</text>`;}).join("");
  $("chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:760px;height:auto" role="img" aria-label="Overall judgements over time">${g}<path d="${path}" fill="none" stroke="#4A2C5E" stroke-width="2.5"/>${dots}</svg>`;}
 function profile(fo,lw){const foIds=new Set(fo.map(o=>o.id)),lwIds=new Set(lw.map(o=>o.id));
  $("prof").innerHTML=`<tr><th>MOE indicator</th><th>Formal observations</th><th>Latest</th><th>Learning walks (seen / partly / not yet)</th></tr>`+inds.map(ind=>{

@@ -42,10 +42,12 @@ const LEVELS = [
 const lvl = n => LEVELS.find(l => l.n === n);
 function levelChip(n){ const L = lvl(n); return L ? `<span class="lchip" style="background:${L.bg};color:${L.fg}">${n} · ${L.name}</span>` : '<span class="lchip">Not judged</span>'; }
 function academicYear(d){ const dt = d ? new Date(d) : new Date(); const y = dt.getFullYear(); return dt.getMonth() >= 7 ? `${y}–${y+1}` : `${y-1}–${y}`; }
-function fmtDate(s){ if(!s) return ""; const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"}); }
+function gnLocale(){ return document.documentElement.lang === "ar" ? "ar-AE-u-nu-latn" : "en-GB"; }
+function fmtDate(s){ if(!s) return ""; const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d).toLocaleDateString(gnLocale(),{weekday:"short",day:"numeric",month:"short",year:"numeric"}); }
 function headerButtons(links){ // replaces the header button with Dashboard/others + Sign out
-  const hb = document.querySelector("header.top .btn"); const box = document.createElement("div"); box.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end";
+  const hb = document.querySelector("header.top .btn"); const box = document.createElement("div"); box.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center";
   hb.replaceWith(box);
+  if (window.gnAppLang) { const sw = document.createElement("button"); sw.type = "button"; sw.className = "langsw notr"; sw.textContent = gnLang() === "ar" ? "English" : "العربية"; box.append(sw); }
   links.forEach(([href, text]) => { const a = document.createElement("a"); a.className = "btn ghost small"; a.href = href; a.textContent = text; box.append(a); });
   const so = document.createElement("a"); so.className = "btn ghost small"; so.href = "#"; so.textContent = "Sign out"; so.onclick = e => { e.preventDefault(); signOut(); }; box.append(so);
 }
