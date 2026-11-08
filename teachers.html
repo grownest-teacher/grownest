@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108j"><title>Teachers · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108k"><title>Teachers · GrowNest</title><style>
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}
 .toolbar input,.toolbar select{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;min-height:44px}
 .toolbar input{flex:1;min-width:200px}
@@ -22,6 +22,7 @@
   <select id="filter"><option value="active">Current teachers</option><option value="left">Left the school</option><option value="all">All</option></select>
   <button class="btn primary" id="addBtn">Add teacher</button>
   <button class="btn ghost" id="importBtn">Import from Excel</button>
+  <button class="btn ghost" id="exportBtn">Download as Excel</button>
  </div>
 
  <section id="formPanel" class="panel hide">
@@ -61,7 +62,7 @@
 
  <div class="card" style="padding:8px 20px"><div class="tlist" id="list"></div></div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108j"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108k"></script>
 <script>
 let ctx=null, teachers=[], editing=null, pending=[];
 const split=s=>String(s||"").split(/[,;\n]/).map(x=>x.trim()).filter(Boolean);
@@ -121,7 +122,14 @@ $("leftBtn").onclick=async()=>{if(!editing)return;const leaving=editing.status!=
 // ---- import ----
 $("importBtn").onclick=()=>{$("formPanel").classList.add("hide");$("importPanel").classList.remove("hide");$("importPanel").scrollIntoView({behavior:"smooth"});};
 $("closeImport").onclick=()=>{$("importPanel").classList.add("hide");pending=[];$("preview").innerHTML="";$("doImport").classList.add("hide");$("fileIn").value="";$("importMsg").classList.add("hide");};
-$("templateLink").onclick=e=>{e.preventDefault();
+function saveXlsx(rows,sheet,file){const ws=XLSX.utils.aoa_to_sheet(rows);ws["!cols"]=rows[0].map((h,i)=>({wch:Math.min(45,Math.max(12,...rows.map(r=>String(r[i]??"").length+2)))}));
+ const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,sheet);XLSX.writeFile(wb,file);}
+$("exportBtn").onclick=()=>{if(!window.XLSX)return showMsg($("msg"),"The Excel maker didn’t load. Check your connection and refresh.","err");
+ if(!teachers.length)return showMsg($("msg"),"There are no teachers to download yet.","info");
+ const rows=[["Name","Email","Type","Homeroom","Subjects","Classes","Status","Started","Left on"],...teachers.map(t=>[t.full_name,t.email,t.teacher_type==="class_teacher"?"Class teacher":"Subject teacher",t.homeroom||"",t.subjects.join(", "),t.classes.join(", "),t.status==="left"?"Left":"Current",t.joined_on||"",t.left_on||""])];
+ saveXlsx(rows,"Teachers",("GrowNest teachers - "+ctx.school.name+" - "+new Date().toISOString().slice(0,10)+".xlsx").replace(/[\\/:*?"<>|]/g,""));
+ showMsg($("msg"),"Downloaded "+teachers.length+" teacher"+(teachers.length===1?"":"s")+". The file opens in Excel or Numbers.","ok");};
+$("templateLink").onclick=e=>{e.preventDefault();if(window.XLSX){saveXlsx([["Name","Email","Type","Homeroom","Subjects","Classes"],["Sara Ahmed","sara.ahmed@school.ae","Class teacher","Grade 3A","Unit of Inquiry, English, Maths, Science","Grade 3A"],["Omar Khalid","omar.khalid@school.ae","Subject teacher","","Arabic","Grade 3A, Grade 3B, Grade 4A"]],"Teachers","GrowNest teachers template.xlsx");return;}
  const csv="\uFEFFName,Email,Type,Homeroom,Subjects,Classes\r\nSara Ahmed,sara.ahmed@school.ae,Class teacher,Grade 3A,\"Unit of Inquiry, English, Maths, Science\",Grade 3A\r\nOmar Khalid,omar.khalid@school.ae,Subject teacher,,Arabic,\"Grade 3A, Grade 3B, Grade 4A\"\r\n";
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="GrowNest teachers template.csv";document.body.appendChild(a);a.click();a.remove();};
 $("fileIn").onchange=async e=>{const f=e.target.files[0];if(!f)return;const m=$("importMsg");
