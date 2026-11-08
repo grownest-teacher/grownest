@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108g"><title>GrowNest</title></head><body>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108h"><title>GrowNest</title></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="#">Sign out</a></div></header>
 <main class="wrap" style="padding:28px 20px 60px">
  <div id="loading" class="msg info">Loading GrowNest…</div>
@@ -10,7 +10,7 @@
    <a class="tile" href="teachers.html" style="text-decoration:none;color:inherit;border-color:var(--lilac)"><h3>Teachers</h3><p class="muted">Add teachers with their subjects, classes and email.</p><span class="soon" style="background:var(--plum);color:#fff">Open</span></a>
    <a class="tile" href="walks.html" style="text-decoration:none;color:inherit;border-color:var(--lilac)"><h3>Learning walks</h3><p class="muted">Short visits focused on chosen MOE indicators.</p><span class="soon" style="background:var(--plum);color:#fff">Open</span></a>
    <a class="tile" href="observations.html" style="text-decoration:none;color:inherit;border-color:var(--lilac)"><h3>Formal observations</h3><p class="muted">Full lessons on the six-point MOE scale.</p><span class="soon" style="background:var(--plum);color:#fff">Open</span></a>
-   <div class="tile"><h3>Appraisals</h3><p class="muted">Termly or yearly reviews built from the teacher’s record.</p><span class="soon">Coming soon</span></div>
+   <a class="tile" href="appraisals.html" style="text-decoration:none;color:inherit;border-color:var(--lilac)"><h3>Appraisals</h3><p class="muted">Termly or yearly reviews built from the teacher’s record.</p><span class="soon" style="background:var(--plum);color:#fff">Open</span></a>
   </div>
   <section id="meetBox" class="card hide" style="margin-bottom:20px">
    <h2>Meeting requests</h2><p class="muted">Teachers who asked to meet about their feedback.</p><div id="meetList"></div>
@@ -25,7 +25,7 @@
   </section>
  </section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108g"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108h"></script>
 <script>
 async function load(){
  const {data:{session}}=await sb.auth.getSession();
@@ -58,7 +58,7 @@ async function loadMeetings(sid){
  const {data,error}=await sb.from("observations").select("id,observed_on,subject,responded_at,teachers(full_name),staff(full_name)").eq("school_id",sid).eq("teacher_response","meeting_requested").eq("meeting_done",false).order("responded_at");
  if(error||!data||!data.length)return;
  $("meetBox").classList.remove("hide");
- $("meetList").innerHTML="<table class='t'>"+data.map(o=>"<tr><td><b>"+esc(o.teachers?.full_name||"")+"</b><br><span class='muted'>"+esc(o.subject||"")+" · observed "+esc(fmtDate(o.observed_on))+(o.staff?" by "+esc(o.staff.full_name):"")+"</span></td><td style='text-align:right;white-space:nowrap'><a class='btn ghost small' href='observe.html?id="+o.id+"'>Open</a> <button class='btn sage small' data-meet='"+o.id+"'>Meeting done</button></td></tr>").join("")+"</table>";
+ $("meetList").innerHTML="<table class='t'>"+data.map(o=>"<tr><td><b>"+esc(o.teachers?.full_name||"")+"</b><br><span class='muted'>"+esc(o.subject||"Appraisal")+" · "+esc(fmtDate(o.observed_on))+(o.staff?" by "+esc(o.staff.full_name):"")+"</span></td><td style='text-align:right;white-space:nowrap'><a class='btn ghost small' href='observe.html?id="+o.id+"'>Open</a> <button class='btn sage small' data-meet='"+o.id+"'>Meeting done</button></td></tr>").join("")+"</table>";
 }
 function wait(title,text){$("loading").classList.add("hide");const w=$("waiting");w.innerHTML="<h2>"+title+"</h2><p>"+text+"</p><button class='btn ghost' id='out'>Sign out</button>";w.classList.remove("hide");$("out").onclick=signOut;}
 function fail(e){$("loading").classList.add("hide");showMsg($("msg"),friendly(e),"err");}

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108g"><title>Teacher record · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108h"><title>Teacher record · GrowNest</title><style>
 main.tr{padding:24px 20px 60px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
 .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
@@ -9,7 +9,7 @@ main.tr{padding:24px 20px 60px}
 .bar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--mist);min-width:90px}
 .tl a{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
 .type{font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:99px}
-.type.fo{background:var(--plum);color:#fff}.type.lw{background:#E5F0E3;color:#3F6B3B}
+.type.fo{background:var(--plum);color:#fff}.type.lw{background:#E5F0E3;color:#3F6B3B}.type.ap{background:#FCE9C8;color:#6B4500}
 .pat{list-style:none;padding-left:0}.pat li{margin-bottom:8px}.pat .n{display:inline-block;min-width:26px;font-weight:700;color:var(--plum)}
 .toolbar2{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .toolbar2 select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}
@@ -30,7 +30,7 @@ main.tr{padding:24px 20px 60px}
  </div>
  <section class="card sec"><h2>Timeline</h2><div class="tl" id="tl"></div></section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108g"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108h"></script>
 <script>
 let ctx=null,T=null,obsAll=[],inds=[],judg={},sts=[];
 const tid=new URLSearchParams(location.search).get("id");
@@ -38,7 +38,7 @@ const WS={seen:"Seen",partly_seen:"Partly seen",not_seen:"Not yet seen"};
 async function init(){ctx=await requireStaff();if(!ctx)return;headerButtons([["app.html","Dashboard"],["teachers.html","Teachers"]]);
  if(!tid)return location.href="teachers.html";
  const [t,o,i]=await Promise.all([sb.from("teachers").select("*").eq("id",tid).maybeSingle(),
-  sb.from("observations").select("id,type,observed_on,academic_year,subject,grade_class,overall_level,status,teacher_response,meeting_done,walk_group,lesson_stage,duration_minutes,staff(full_name)").eq("teacher_id",tid).order("observed_on",{ascending:true}),
+  sb.from("observations").select("id,type,observed_on,academic_year,period_label,subject,grade_class,overall_level,status,teacher_response,meeting_done,walk_group,lesson_stage,duration_minutes,staff(full_name)").eq("teacher_id",tid).order("observed_on",{ascending:true}),
   sb.from("indicators").select("*").contains("used_in",["formal_observation"]).order("sort")]);
  if(t.error||!t.data)return showMsg($("msg"),"This teacher could not be found.","err");
  T=t.data;obsAll=o.data||[];inds=i.data||[];
@@ -79,7 +79,8 @@ function patterns(list){const ids=new Set(list.map(o=>o.id));const c={strength:{
 function timeline(list){const r=[...list].reverse();
  const resp=o=>o.teacher_response==="meeting_requested"?(o.meeting_done?'<span class="lchip" style="background:#E5F0E3;color:#3F6B3B">Meeting held</span>':'<span class="lchip" style="background:#FCE9C8;color:#6B4500">Meeting requested</span>'):o.teacher_response==="no_meeting"?'<span class="lchip">No meeting needed</span>':o.status==="sent"?'<span class="lchip">Sent</span>':'<span class="lchip">Draft</span>';
  const walkSum=o=>{const c={seen:0,partly_seen:0,not_seen:0};(judg[o.id]||[]).forEach(j=>{if(j.walk_status)c[j.walk_status]++;});return `<span class="muted" style="font-size:.85rem">${c.seen} seen · ${c.partly_seen} partly · ${c.not_seen} not yet</span>`;};
- $("tl").innerHTML=r.length?r.map(o=>`<a href="${o.type==="learning_walk"?"walk.html?id="+o.walk_group:"observe.html?id="+o.id}"><span class="type ${o.type==="learning_walk"?"lw":"fo"}">${o.type==="learning_walk"?"Learning walk":"Formal observation"}</span><div style="flex:1;min-width:200px"><b>${esc(fmtDate(o.observed_on))}</b> · ${esc([o.grade_class,o.subject].filter(Boolean).join(" · "))}<br><span class="muted" style="font-size:.85rem">${o.staff?"by "+esc(o.staff.full_name):""}${o.duration_minutes?" · "+o.duration_minutes+" min":""}</span></div>${o.type==="formal_observation"&&o.overall_level?levelChip(o.overall_level):o.type==="learning_walk"?walkSum(o):""} ${resp(o)}</a>`).join(""):'<p class="muted">No observations or learning walks in this period yet.</p>';}
+ const TY={learning_walk:["lw","Learning walk"],formal_observation:["fo","Formal observation"],appraisal:["ap","Appraisal"]};
+ $("tl").innerHTML=r.length?r.map(o=>`<a href="${o.type==="learning_walk"?"walk.html?id="+o.walk_group:o.type==="appraisal"?"appraise.html?id="+o.id:"observe.html?id="+o.id}"><span class="type ${TY[o.type][0]}">${TY[o.type][1]}</span><div style="flex:1;min-width:200px"><b>${esc(fmtDate(o.observed_on))}</b> · ${esc(o.type==="appraisal"?[o.period_label,o.academic_year].filter(Boolean).join(" "):[o.grade_class,o.subject].filter(Boolean).join(" · "))}<br><span class="muted" style="font-size:.85rem">${o.staff?"by "+esc(o.staff.full_name):""}${o.duration_minutes?" · "+o.duration_minutes+" min":""}</span></div>${o.type!=="learning_walk"&&o.overall_level?levelChip(o.overall_level):o.type==="learning_walk"?walkSum(o):""} ${resp(o)}</a>`).join(""):'<p class="muted">No observations or learning walks in this period yet.</p>';}
 // ---- Word summary ----
 $("docBtn").onclick=async()=>{if(!window.JSZip)return showMsg($("msg"),"The Word maker didn’t load. Check your connection and refresh.","err");
  const list=sel(),fo=list.filter(o=>o.type==="formal_observation"),lw=list.filter(o=>o.type==="learning_walk");
