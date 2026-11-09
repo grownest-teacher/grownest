@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#4A2C5E"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="GrowNest"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108q"><title>Formal observation · GrowNest</title><style>
+<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="favicon.png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#4A2C5E"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="GrowNest"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=20261108r"><title>Formal observation · GrowNest</title><style>
 main.obs{padding:22px 20px 170px}
 .crit{display:grid;grid-template-columns:30px 1fr;background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:14px;overflow:hidden}
 .spine{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:600;font-size:.7rem;letter-spacing:.06em;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px 0}
@@ -27,7 +27,7 @@ main.obs{padding:22px 20px 170px}
 .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
 textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;width:100%;min-height:80px}
 @media (max-width:640px){.checks{grid-template-columns:1fr}.lv span{display:none}.lv b{font-size:1.3rem}.crit{grid-template-columns:22px 1fr}.crit-body{padding:12px}.bar-in{padding:8px 12px}}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108q"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108q"></script><link rel="stylesheet" href="rtl-app.css?v=20261108q"></head><body>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="obsdoc.js?v=20261108r"></script><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"><script>(function(){try{if((localStorage.getItem("gn_lang")||"en")==="ar"){document.documentElement.lang="ar";document.documentElement.dir="rtl";}}catch(e){}})();</script><script src="i18n-app.js?v=20261108r"></script><link rel="stylesheet" href="rtl-app.css?v=20261108r"></head><body>
 <header class="top"><div class="wrap"><a href="index.html"><img src="logo-header.png" alt="GrowNest"></a><a class="btn ghost small" href="app.html">Dashboard</a></div></header>
 <main class="wrap obs">
  <h1>Formal observation</h1>
@@ -39,7 +39,7 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
    <label class="f">Class / grade<input id="grade" list="classList"></label>
    <label class="f">Subject observed<select id="subject"><option value="">Choose the lesson subject…</option></select></label>
   </div>
-  <label class="f">Lesson focus<input id="focus" placeholder="Learning objective or unit"></label>
+  <label class="f">Lesson topic or learning objective<input id="focus" placeholder="e.g. Maths – adding fractions with different denominators"></label>
   <datalist id="classList"></datalist>
   <p class="muted" id="startHint" style="margin:0">Choose the teacher to start. Everything saves automatically.</p>
  </section>
@@ -89,7 +89,7 @@ textarea.f{font:inherit;padding:10px 12px;border:1px solid var(--line);border-ra
  <button class="btn primary small" id="sendBtn">Send to teacher</button>
  <a class="btn ghost small" href="observations.html">Done</a>
 </div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108q"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="gn.js?v=20261108r"></script>
 <script>
 let ctx=null, obs=null, teachers=[], inds=[], stmts=[], judg={}, ticked=new Set(), evidence=[];
 const AREA_COL={"Students’ achievement":"#6F9E6B","Personal development":"#9C84C4","Teaching and assessment":"#4A2C5E"};const AREA_LBL={"Students’ achievement":"Achievement","Personal development":"Personal","Teaching and assessment":"Teaching"};
@@ -131,7 +131,7 @@ function fillLists(){const t=teachers.find(x=>x.id===$("teacher").value);const c
  $("classList").innerHTML=(t?t.classes:[]).map(c=>`<option value="${esc(c)}">`).join("");
  const mine=t?t.subjects:[], others=SUBJECTS.filter(x=>!mine.includes(x));
  if(cur&&!mine.includes(cur)&&!others.includes(cur))others.push(cur);
- $("subject").innerHTML='<option value="">Choose the lesson subject…</option>'+(mine.length?`<optgroup label="Subjects this teacher teaches">${mine.map(x=>`<option>${esc(x)}</option>`).join("")}</optgroup>`:"")+`<optgroup label="${mine.length?"Other subjects":"Subjects"}">${others.map(x=>`<option>${esc(x)}</option>`).join("")}</optgroup>`;
+ $("subject").innerHTML='<option value="">Choose the lesson subject…</option>'+(mine.length?`<optgroup label="Subjects this teacher teaches">${mine.map(x=>`<option>${esc(x)}</option>`).join("")}</optgroup>`:"")+`<optgroup label="${mine.length?"Other subjects":"Subjects"}">${others.map(x=>`<option>${esc(x)}</option>`).join("")}</optgroup>`+OTHER_OPT;
  if(cur)$("subject").value=cur;}
 function renderAlso(){$("alsoBox").innerHTML=alsoSeenHtml(obs.also_seen||[],"");}
 $("alsoBox").addEventListener("click",e=>{const b=e.target.closest(".alsob");if(!b||!obs)return;const c=b.dataset.also;const a=new Set(obs.also_seen||[]);
@@ -144,7 +144,7 @@ $("teacher").onchange=async()=>{const tid=$("teacher").value;if(!tid||obs)return
  obs=data;history.replaceState(null,"","observe.html?id="+obs.id);$("teacher").disabled=true;showForm();};
 let ft=null;
 function fieldsChanged(){if(!obs)return;clearTimeout(ft);$("saveSt").textContent="Saving…";ft=setTimeout(()=>save(()=>sb.from("observations").update({observed_on:$("date").value,academic_year:academicYear($("date").value),grade_class:$("grade").value,subject:$("subject").value,focus:$("focus").value,extra_strengths:$("extraS").value,extra_development:$("extraD").value}).eq("id",obs.id)),700);}
-["date","grade","focus","extraS","extraD"].forEach(k=>$(k).addEventListener("input",fieldsChanged));$("subject").addEventListener("change",fieldsChanged);
+["date","grade","focus","extraS","extraD"].forEach(k=>$(k).addEventListener("input",fieldsChanged));watchOther($("subject"));$("subject").addEventListener("change",fieldsChanged);
 function renderCriteria(){
  $("criteria").innerHTML=inds.map(ind=>{const n=judg[ind.code]||0;const L=lvl(n);
   const list=(kind,title)=>{const ss=stmts.filter(s=>s.indicator_code===ind.code&&s.level===n&&s.kind===kind&&(s.active!==false||ticked.has(s.id)));

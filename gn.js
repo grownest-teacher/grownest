@@ -61,7 +61,21 @@ function headerButtons(links){ // replaces the header button with Dashboard/othe
   const so = document.createElement("a"); so.className = "btn ghost small"; so.href = "#"; so.textContent = "Sign out"; so.onclick = e => { e.preventDefault(); signOut(); }; box.append(so);
 }
 
-const SUBJECTS = ["Unit of Inquiry","English","Maths","Science","Arabic","Islamic Education","Social Studies","Moral Education","Art","Music","PE","Computing","French","Read Write Inc.","Library"];
+const SUBJECTS = ["Unit of Inquiry","English","Maths","Science","Arabic A","Arabic B","Islamic A","Islamic B","Social Studies A","Social Studies B","Moral Education","Art","Music","PE","Computing","French","Read Write Inc.","Library"];
+// "Other subject" choice in subject lists: lets the observer type any subject
+const OTHER_OPT = '<option value="__other">Other subject – type it…</option>';
+function watchOther(sel){
+  let prev = sel.value;
+  sel.addEventListener("focus", () => { prev = sel.value; });
+  sel.addEventListener("change", e => {
+    if (sel.value !== "__other") { prev = sel.value; return; }
+    e.stopImmediatePropagation();
+    const v = (prompt(t("Type the subject of this lesson", "اكتب مادة هذه الحصة")) || "").trim();
+    if (!v) { sel.value = prev; return; }
+    if (![...sel.options].some(o => o.value === v)) { const o = document.createElement("option"); o.value = v; o.textContent = v; sel.insertBefore(o, sel.querySelector('option[value="__other"]')); }
+    sel.value = v; prev = v; sel.dispatchEvent(new Event("change"));
+  }, true);
+}
 
 // Sends feedback automatically from feedback@ via the GrowNest email function; falls back to the email app.
 async function deliverFeedback(o){
@@ -81,7 +95,7 @@ async function deliverFeedback(o){
 }
 // Arabic feedback for teachers who choose it
 const LV_AR = {6: "متميز", 5: "جيد جدًا", 4: "جيد", 3: "مقبول", 2: "ضعيف", 1: "ضعيف جدًا"};
-const SUBJ_AR = {"Unit of Inquiry": "وحدة الاستقصاء", "English": "اللغة الإنجليزية", "Maths": "الرياضيات", "Science": "العلوم", "Arabic": "اللغة العربية", "Islamic Education": "التربية الإسلامية", "Social Studies": "الدراسات الاجتماعية",
+const SUBJ_AR = {"Arabic A": "اللغة العربية (أ)", "Arabic B": "اللغة العربية (ب)", "Islamic A": "التربية الإسلامية (أ)", "Islamic B": "التربية الإسلامية (ب)", "Social Studies A": "الدراسات الاجتماعية (أ)", "Social Studies B": "الدراسات الاجتماعية (ب)", "Unit of Inquiry": "وحدة الاستقصاء", "English": "اللغة الإنجليزية", "Maths": "الرياضيات", "Science": "العلوم", "Arabic": "اللغة العربية", "Islamic Education": "التربية الإسلامية", "Social Studies": "الدراسات الاجتماعية",
   "Moral Education": "التربية الأخلاقية", "Art": "الفنون", "Music": "الموسيقى", "PE": "التربية البدنية", "Computing": "الحوسبة", "French": "اللغة الفرنسية", "Read Write Inc.": "Read Write Inc.", "Library": "المكتبة"};
 const subjAr = s => SUBJ_AR[s] || s || "";
 function fmtDateIn(s, lang){ if (!s) return ""; const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d).toLocaleDateString(lang === "ar" ? "ar-AE-u-nu-latn" : "en-GB", {weekday: "long", day: "numeric", month: "long", year: "numeric"}); }
