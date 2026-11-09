@@ -7,6 +7,7 @@ async function init(){
   headerButtons([["app.html","Dashboard"],["sef.html","SEF evidence"]]);
   $("schoolName").textContent = ctx.school.name;
   renderLogo();
+  if (ctx.staff.role === "school_admin") $("backupBox").classList.remove("hide");
   if (!["school_admin","leader"].includes(ctx.staff.role)) {
     $("editor").classList.add("hide");
     showMsg($("msg"), "Only school admins and leaders can change the phases. Ask your school admin if they need updating.", "info");
@@ -89,3 +90,81 @@ async function removeLogo(){
   ctx.school.logo_path = null; renderLogo(); showMsg($("msg"), "Logo removed.", "ok");
 }
 init();
+
+// ---------- Full backup (school admins) ----------
+async function fetchAll(table, cols, filter){
+  const out = []; let from = 0;
+  for (;;) {
+    let q = sb.from(table).select(cols).range(from, from + 999); if (filter) q = filter(q);
+    const {data, error} = await q; if (error) throw error;
+    out.push(...(data || [])); if (!data || data.length < 1000) break; from += 1000;
+  }
+  return out;
+}
+function flat(r){ const o = {}; Object.entries(r).forEach(([k, v]) => { if (k === "response_token") return; o[k] = Array.isArray(v) ? v.join(", ") : (v && typeof v === "object" ? JSON.stringify(v) : v); }); return o; }
+function bstatus(t){ $("bkStatus").textContent = t; }
+async function backupData(){
+  if (!window.XLSX) return showMsg($("msg"), t("The Excel maker didn’t load. Check your connection and refresh.", "لم يتم تحميل أداة Excel. تحقّق من الاتصال وحدّث الصفحة."), "err");
+  const btn = $("bkData"); btn.disabled = true;
+  try {
+    const sid = ctx.school.id, bySchool = q => q.eq("school_id", sid);
+    bstatus(t("Gathering teachers and staff…", "جارٍ جمع المعلمين والموظفين…"));
+    const [teachers, staff, phases, walks, obs, sef, inds] = await Promise.all([
+      fetchAll("teachers", "*", bySchool), fetchAll("staff", "id,full_name,job_title,email,role,active,created_at", bySchool), fetchAll("school_phases", "*", bySchool),
+      fetchAll("walks", "*", bySchool), fetchAll("observations", "*", bySchool), fetchAll("sef_entries", "*", bySchool), fetchAll("indicators", "code,title,moe_ref")]);
+    const T = Object.fromEntries(teachers.map(x => [x.id, x.full_name])), S = Object.fromEntries(staff.map(x => [x.id, x.full_name])), I = Object.fromEntries(inds.map(x => [x.code, x.title]));
+    const O = Object.fromEntries(obs.map(o => [o.id, o])), ids = obs.map(o => o.id), judg = [], ticks = [], ev = [];
+    for (let i = 0; i < ids.length; i += 100) {
+      bstatus(t(`Gathering observation details… ${Math.min(i + 100, ids.length)} of ${ids.length}`, `جارٍ جمع تفاصيل الملاحظات… ${Math.min(i + 100, ids.length)} من ${ids.length}`));
+      const chunk = ids.slice(i, i + 100);
+      const [j, s, e] = await Promise.all([fetchAll("observation_judgements", "*", q => q.in("observation_id", chunk)),
+        fetchAll("observation_statements", "observation_id, statements(indicator_code,level,kind,text)", q => q.in("observation_id", chunk)),
+        fetchAll("evidence", "*", q => q.in("observation_id", chunk))]);
+      judg.push(...j); ticks.push(...s); ev.push(...e);
+    }
+    const who = id => ({teacher: T[O[id]?.teacher_id] || "", date: O[id]?.observed_on || "", type: O[id]?.type || ""});
+    const sheets = [
+      ["Teachers", teachers.map(flat)],
+      ["Staff", staff.map(flat)],
+      ["Observations", obs.map(o => ({teacher: T[o.teacher_id] || "", observer: S[o.observer_id] || "", ...flat(o)}))],
+      ["Judgements", judg.map(r => ({...who(r.observation_id), indicator_title: I[r.indicator_code] || "", ...flat(r)}))],
+      ["Ticked statements", ticks.filter(r => r.statements).map(r => ({...who(r.observation_id), observation_id: r.observation_id, indicator: r.statements.indicator_code, level: r.statements.level, kind: r.statements.kind, statement: r.statements.text}))],
+      ["Learning walks", walks.map(w => ({observer: S[w.observer_id] || "", ...flat(w)}))],
+      ["Photos", ev.map(r => ({...who(r.observation_id), ...flat(r)}))],
+      ["SEF write-up", sef.map(flat)],
+      ["Phases", phases.map(flat)]];
+    const wb = XLSX.utils.book_new();
+    sheets.forEach(([name, rows]) => { const ws = rows.length ? XLSX.utils.json_to_sheet(rows) : XLSX.utils.aoa_to_sheet([["No records"]]); XLSX.utils.book_append_sheet(wb, ws, name); });
+    const info = XLSX.utils.aoa_to_sheet([["GrowNest backup"], ["School", ctx.school.name], ["Downloaded", new Date().toLocaleString("en-GB")], ["By", ctx.staff.full_name],
+      ["Teachers", teachers.length], ["Observations, walk visits and appraisals", obs.length], ["Photos (files are in the separate photos zip)", ev.length]]);
+    XLSX.utils.book_append_sheet(wb, info, "About this backup"); wb.SheetNames.unshift(wb.SheetNames.pop());
+    XLSX.writeFile(wb, `GrowNest backup - ${ctx.school.name} - ${new Date().toISOString().slice(0, 10)}.xlsx`.replace(/[\\/:*?"<>|]/g, ""));
+    bstatus(""); showMsg($("msg"), t(`Backup downloaded: ${teachers.length} teachers and ${obs.length} observations, walk visits and appraisals.`, `تم تنزيل النسخة الاحتياطية: ${teachers.length} معلمًا و${obs.length} من الملاحظات والزيارات وتقييمات الأداء.`), "ok");
+  } catch (e) { bstatus(""); showMsg($("msg"), friendly(e), "err"); }
+  btn.disabled = false;
+}
+async function backupPhotos(){
+  if (!window.JSZip) return showMsg($("msg"), t("The zip maker didn’t load. Check your connection and refresh.", "لم يتم تحميل أداة الضغط. تحقّق من الاتصال وحدّث الصفحة."), "err");
+  const btn = $("bkPhotos"); btn.disabled = true;
+  try {
+    const sid = ctx.school.id;
+    const [ev, obs, teachers] = await Promise.all([fetchAll("evidence", "*", q => q.eq("school_id", sid)), fetchAll("observations", "id,teacher_id,observed_on", q => q.eq("school_id", sid)), fetchAll("teachers", "id,full_name", q => q.eq("school_id", sid))]);
+    if (!ev.length) { btn.disabled = false; return showMsg($("msg"), t("There are no photos to download yet.", "لا توجد صور للتنزيل بعد."), "info"); }
+    const O = Object.fromEntries(obs.map(o => [o.id, o])), T = Object.fromEntries(teachers.map(x => [x.id, x.full_name])), z = new JSZip(), clean = s => String(s || "").replace(/[\\/:*?"<>|]/g, "").trim();
+    let n = 0, failed = 0;
+    for (const e of ev) {
+      bstatus(t(`Downloading photos… ${n + failed + 1} of ${ev.length}`, `جارٍ تنزيل الصور… ${n + failed + 1} من ${ev.length}`));
+      const {data, error} = await sb.storage.from("evidence").download(e.storage_path);
+      if (error || !data) { failed++; continue; }
+      const o = O[e.observation_id] || {}, ext = (e.storage_path.split(".").pop() || "jpg").slice(0, 4);
+      z.file(`${clean(T[o.teacher_id]) || "Teacher"}/${o.observed_on || "date"} ${clean(e.indicator_code)} ${clean(e.caption).slice(0, 40)} ${e.id.slice(0, 6)}.${ext}`.replace(/ +/g, " "), data); n++;
+    }
+    if (ctx.school.logo_path) { try { const r = await fetch(logoUrl(ctx.school.logo_path)); if (r.ok) z.file("School logo.png", await r.blob()); } catch (_) {} }
+    bstatus(t("Making the zip file…", "جارٍ إنشاء الملف المضغوط…"));
+    const blob = await z.generateAsync({type: "blob"}), a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = `GrowNest photos - ${clean(ctx.school.name)} - ${new Date().toISOString().slice(0, 10)}.zip`; document.body.appendChild(a); a.click(); a.remove();
+    bstatus(""); showMsg($("msg"), t(`${n} photos downloaded${failed ? `, ${failed} couldn’t be downloaded` : ""}.`, `تم تنزيل ${n} صورة${failed ? `، وتعذّر تنزيل ${failed}` : ""}.`), failed ? "info" : "ok");
+  } catch (e) { bstatus(""); showMsg($("msg"), friendly(e), "err"); }
+  btn.disabled = false;
+}
+if ($("bkData")) { $("bkData").onclick = backupData; $("bkPhotos").onclick = backupPhotos; }
